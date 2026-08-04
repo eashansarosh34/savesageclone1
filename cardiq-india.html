@@ -7,128 +7,6 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=DM+Serif+Display&display=swap" rel="stylesheet">
 <style>
-/* --- MARKETING STYLES --- */
-
-
-
-
-.wrap{max-width:1040px;margin:0 auto;padding:0 24px}
-.wrap-narrow{max-width:760px;margin:0 auto;padding:0 24px}
-
-/* Header */
-header{position:sticky;top:0;z-index:50;background:rgba(10,22,40,.92);backdrop-filter:blur(10px);padding:14px 0}
-header .wrap{display:flex;align-items:center;justify-content:space-between}
-.logo{font-family:'DM Serif Display',serif;font-size:24px;color:var(--gold)}
-.nav-links{display:flex;gap:24px;align-items:center}
-.nav-links a{color:rgba(255,255,255,.75);text-decoration:none;font-size:14px}
-.nav-links a:hover{color:#fff}
-.btn-nav{background:var(--gold);color:var(--navy)!important;padding:9px 18px;border-radius:8px;font-weight:600}
-
-/* Hero */
-.hero{background:linear-gradient(160deg,var(--navy) 0%,var(--navy2) 100%);color:#fff;padding:72px 0 80px;text-align:center}
-.hero-badge{display:inline-block;background:rgba(201,168,76,.15);color:var(--gold);font-size:13px;font-weight:600;padding:6px 16px;border-radius:99px;margin-bottom:24px;border:1px solid rgba(201,168,76,.3)}
-.hero h1{font-family:'DM Serif Display',serif;font-size:52px;line-height:1.1;margin-bottom:20px;letter-spacing:-.5px}
-.hero h1 .gold{color:var(--gold)}
-.hero p.sub{font-size:20px;color:rgba(255,255,255,.72);max-width:620px;margin:0 auto 36px;line-height:1.55}
-.hero-cta{display:inline-flex;gap:14px;flex-wrap:wrap;justify-content:center}
-.btn-primary{background:var(--gold);color:var(--navy);padding:15px 34px;border-radius:11px;text-decoration:none;font-weight:700;font-size:16px;transition:transform .15s}
-.btn-primary:hover{transform:translateY(-2px)}
-.btn-secondary{background:rgba(255,255,255,.1);color:#fff;padding:15px 28px;border-radius:11px;text-decoration:none;font-weight:600;font-size:16px;border:1px solid rgba(255,255,255,.2)}
-.hero-trust{margin-top:28px;font-size:13px;color:rgba(255,255,255,.5);display:flex;gap:20px;justify-content:center;flex-wrap:wrap}
-.hero-trust span::before{content:"✓ ";color:var(--green)}
-
-/* Proof strip */
-.proof{background:var(--navy2);padding:20px 0;text-align:center}
-.proof-inner{display:flex;justify-content:center;gap:48px;flex-wrap:wrap}
-.proof-stat b{display:block;font-size:26px;color:var(--gold);font-family:'DM Serif Display',serif}
-.proof-stat span{font-size:12px;color:rgba(255,255,255,.6)}
-
-/* Sections */
-section{padding:72px 0}
-.eyebrow{text-align:center;color:var(--gold);font-weight:600;font-size:13px;letter-spacing:.08em;text-transform:uppercase;margin-bottom:12px}
-h2.sec{font-family:'DM Serif Display',serif;font-size:36px;text-align:center;margin-bottom:16px;line-height:1.2}
-p.sec-sub{text-align:center;color:var(--slate);font-size:17px;max-width:600px;margin:0 auto 48px}
-
-/* Problem cards */
-.problem-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:20px}
-.problem-card{background:var(--surface);border:1px solid var(--border);border-radius:16px;padding:28px}
-.problem-card .icon{font-size:28px;margin-bottom:12px}
-.problem-card h3{font-size:18px;margin-bottom:8px}
-.problem-card p{color:var(--slate);font-size:14px}
-
-/* How it works */
-.steps{display:grid;grid-template-columns:repeat(3,1fr);gap:28px;margin-top:20px}
-.step{text-align:center}
-.step-num{width:44px;height:44px;background:var(--navy);color:var(--gold);border-radius:50%;display:flex;align-items:center;justify-content:center;font-weight:700;font-size:18px;margin:0 auto 16px}
-.step h3{font-size:17px;margin-bottom:8px}
-.step p{color:var(--slate);font-size:14px}
-
-/* Comparison table */
-.vs-table{background:var(--surface);border-radius:16px;overflow:hidden;border:1px solid var(--border);margin-top:20px}
-.vs-table table{width:100%;border-collapse:collapse}
-.vs-table th,.vs-table td{padding:16px 20px;text-align:left;border-bottom:1px solid var(--border);font-size:15px}
-.vs-table th{background:var(--navy);color:#fff;font-weight:600}
-.vs-table th:nth-child(2){background:var(--gold);color:var(--navy);text-align:center}
-.vs-table th:nth-child(3){text-align:center;color:rgba(255,255,255,.6)}
-.vs-table td:nth-child(2){text-align:center;font-weight:600;color:var(--green)}
-.vs-table td:nth-child(3){text-align:center;color:var(--slate)}
-.vs-table tr:last-child td{border-bottom:none}
-
-/* Feature list */
-.feat-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:24px}
-.feat{display:flex;gap:16px;align-items:flex-start}
-.feat .fi{font-size:24px;flex-shrink:0}
-.feat h3{font-size:17px;margin-bottom:4px}
-.feat p{color:var(--slate);font-size:14px}
-
-/* Privacy callout */
-.privacy-box{background:var(--navy);color:#fff;border-radius:20px;padding:48px;text-align:center}
-.privacy-box h2{font-family:'DM Serif Display',serif;font-size:30px;margin-bottom:16px}
-.privacy-box h2 .gold{color:var(--gold)}
-.privacy-box p{color:rgba(255,255,255,.72);max-width:560px;margin:0 auto 12px}
-.privacy-list{display:flex;gap:28px;justify-content:center;flex-wrap:wrap;margin-top:24px;font-size:14px}
-.privacy-list span::before{content:"✓ ";color:var(--green);font-weight:700}
-
-/* Pricing */
-.price-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:24px;max-width:720px;margin:0 auto}
-.price-card{border:1px solid var(--border);border-radius:18px;padding:32px;background:#fff}
-.price-card.pro{border:2px solid var(--gold);position:relative}
-.price-tag{position:absolute;top:-13px;left:50%;transform:translateX(-50%);background:var(--gold);color:var(--navy);font-size:12px;font-weight:700;padding:4px 16px;border-radius:99px}
-.price-card h3{font-size:20px;margin-bottom:4px}
-.price-amount{font-size:40px;font-family:'DM Serif Display',serif;margin:12px 0}
-.price-amount small{font-size:15px;color:var(--slate);font-family:Inter}
-.price-card ul{list-style:none;margin:20px 0}
-.price-card li{padding:8px 0;font-size:14px;color:#2a3744;border-bottom:1px solid var(--surface2)}
-.price-card li::before{content:"✓ ";color:var(--green);font-weight:700}
-.price-card li.no{color:var(--slate)}
-.price-card li.no::before{content:"- ";color:var(--slate)}
-
-/* FAQ */
-.faq-item{border-bottom:1px solid var(--border);padding:20px 0}
-.faq-item h3{font-size:17px;margin-bottom:8px}
-.faq-item p{color:var(--slate);font-size:15px}
-
-/* Final CTA */
-.final{background:linear-gradient(160deg,var(--navy),var(--navy2));color:#fff;text-align:center;border-radius:24px;padding:64px 32px;margin:40px 0}
-.final h2{font-family:'DM Serif Display',serif;font-size:38px;margin-bottom:16px}
-.final p{color:rgba(255,255,255,.7);font-size:18px;margin-bottom:32px}
-
-/* Footer */
-footer{border-top:1px solid var(--border);padding:40px 0;font-size:13px;color:var(--slate)}
-footer .wrap{display:flex;justify-content:space-between;flex-wrap:wrap;gap:16px}
-footer a{color:var(--slate);text-decoration:none;margin-right:20px}
-
-@media(max-width:820px){
-  .problem-grid,.steps,.feat-grid,.price-grid{grid-template-columns:1fr}
-  .hero h1{font-size:36px}
-  .hero p.sub{font-size:17px}
-  h2.sec{font-size:28px}
-  .nav-links a:not(.btn-nav){display:none}
-  .proof-inner{gap:28px}
-}
-
-/* --- APP STYLES --- */
-
 *,*::before,*::after{box-sizing:border-box;margin:0;padding:0;}
 :root{
   --navy:#0A1628;--navy-mid:#162240;--navy-light:#1E3356;
@@ -543,152 +421,6 @@ input[type=range]{width:100%;accent-color:var(--navy);}
   .rpt-hero{grid-template-columns:1fr;}
   .rpt-bar-lbl{width:90px;}
 }
-
-/* Hero embedded Nav/Prefs styles */
-.hero-nav-wrapper {
-    background: #fff;
-    border-radius: 12px 12px 0 0;
-    padding: 8px;
-    margin-top: 40px;
-    box-shadow: 0 10px 30px rgba(0,0,0,0.2);
-}
-.hero-nav-wrapper .nav {
-    margin: 0;
-    background: #fff;
-    border: none;
-    border-radius: 0;
-    padding: 0;
-    gap: 8px;
-}
-.hero-nav-wrapper .nav-btn {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-    padding: 16px 8px;
-    border: 1px solid var(--border);
-    border-radius: 10px;
-    background: #fff;
-    transition: all 0.2s ease;
-}
-.hero-nav-wrapper .nav-btn:hover {
-    border-color: var(--border-strong);
-    background: var(--surface2);
-}
-.hero-nav-wrapper .nav-btn.active {
-    box-shadow: none;
-    border-color: var(--navy);
-    background: #fff;
-}
-.nav-icon {
-    margin-bottom: 8px;
-    color: var(--navy);
-    display: flex;
-}
-.nav-icon svg {
-    width: 32px;
-    height: 32px;
-    stroke-width: 1.5;
-}
-.hero-nav-wrapper .nb-label {
-    font-size: 15px;
-    font-weight: 600;
-    color: var(--navy);
-    margin-bottom: 4px;
-}
-.hero-nav-wrapper .nb-sub {
-    font-size: 12px;
-    color: var(--slate);
-}
-
-.hero-prefs-wrapper {
-    background: #111A2C;
-    border-radius: 0 0 12px 12px;
-    padding: 12px 20px;
-    display: flex;
-    gap: 40px;
-    align-items: center;
-    flex-wrap: wrap;
-    box-shadow: 0 10px 30px rgba(0,0,0,0.2);
-}
-.hero-prefs-wrapper .pref-col {
-    flex-direction: row;
-    align-items: center;
-    gap: 12px;
-}
-.hero-prefs-wrapper .pref-lbl {
-    font-size: 10px;
-    color: rgba(255,255,255,0.4);
-    letter-spacing: 0.1em;
-}
-.hero-prefs-wrapper .ptog-btn {
-    border: 1px solid rgba(255,255,255,0.1);
-    color: rgba(255,255,255,0.6);
-    background: transparent;
-}
-.hero-prefs-wrapper .ptog-btn.active {
-    background: var(--gold);
-    color: var(--navy);
-    border-color: var(--gold);
-}
-.hero-prefs-wrapper .pchk {
-    color: rgba(255,255,255,0.6);
-}
-
-/* Roleplay Grid */
-.rp-grid {
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    gap: 24px;
-    margin-top: 24px;
-}
-.rp-card {
-    background: var(--surface);
-    border: 1px solid var(--border);
-    border-radius: 16px;
-    overflow: hidden;
-}
-.rp-header {
-    background: var(--navy);
-    color: #fff;
-    padding: 16px 20px;
-    font-weight: 600;
-    font-size: 18px;
-}
-.rp-body {
-    padding: 24px 20px;
-}
-.rp-step {
-    margin-bottom: 20px;
-}
-.rp-step:last-child {
-    margin-bottom: 0;
-}
-.rp-label {
-    font-size: 11px;
-    text-transform: uppercase;
-    letter-spacing: 0.05em;
-    color: var(--slate);
-    font-weight: 600;
-    margin-bottom: 4px;
-}
-.rp-val {
-    font-size: 15px;
-    color: var(--navy);
-    line-height: 1.5;
-}
-.rp-val strong {
-    color: var(--green-text);
-}
-.rp-val.bad {
-    color: var(--red-text);
-}
-
-@media(max-width: 820px) {
-    .hero-nav-wrapper .nav { grid-template-columns: repeat(2, 1fr); display: grid; }
-    .rp-grid { grid-template-columns: 1fr; }
-}
-
 </style>
 <!-- Supabase client library (loaded from CDN). If this fails to load or keys are
      not configured below, the app falls back to local-only simulated accounts. -->
@@ -696,92 +428,57 @@ input[type=range]{width:100%;accent-color:var(--navy);}
 </head>
 <body>
 
-<header>
-<div class="wrap">
-<span class="logo">CardIQ</span>
-<nav class="nav-links">
-<a href="/savesageclone1/best/dining/">Best cards</a>
-<a href="/savesageclone1/#how">How it works</a>
-<a href="/savesageclone1/#pricing">Pricing</a>
-<a class="btn-nav" href="#app">Open the tool</a>
-</nav>
-</div>
+<header class="hdr">
+  <div class="hdr-inner">
+    <div class="logo">
+      <span class="logo-mark">CardIQ</span>
+      <span class="logo-tag">India · UPI-first · No email access needed · No sponsored rankings</span>
+    </div>
+    <div class="acct-wrap" id="account-chip">
+      <button class="acct-btn" onclick="showLoginPrompt('saveWallet')">Sign in — free</button>
+    </div>
+  </div>
 </header>
 
-<div class="hero">
-<div class="wrap">
-<div class="hero-badge">Built for India · UPI-first · No email access needed</div>
-<h1>Indians lose <span class="gold">thousands of crores</span><br>in expired card points every year</h1>
-<p class="sub">Find the best card to use. Get alerts before points expire. Verify the bank paid you. Start for free. No login required.</p>
+<main class="shell">
 
-
-    <div class="hero-nav-wrapper">
-      <!-- Nav -->
+  <!-- Nav -->
   <nav class="nav" role="tablist" aria-label="Tool sections">
     <button class="nav-btn active" role="tab" aria-selected="true"  onclick="showTab('a')" id="tab-a">
-      <span class="nav-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><circle cx="12" cy="12" r="10"></circle><circle cx="12" cy="12" r="6"></circle><circle cx="12" cy="12" r="2"></circle></svg></span>
       <span class="nb-label">Single category</span>
       <span class="nb-sub">Best card for one spend type</span>
     </button>
     <button class="nav-btn" role="tab" aria-selected="false" onclick="showTab('b')" id="tab-b">
-      <span class="nav-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><rect x="3" y="4" width="18" height="12" rx="2"></rect><rect x="5" y="8" width="14" height="12" rx="2"></rect></svg></span>
       <span class="nb-label">Wallet optimizer</span>
       <span class="nb-sub">Best 1–3 card combo</span>
     </button>
     <button class="nav-btn" role="tab" aria-selected="false" onclick="showTab('c')" id="tab-c">
-      <span class="nav-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><ellipse cx="12" cy="5" rx="9" ry="3"></ellipse><path d="M21 12c0 1.66-4 3-9 3s-9-1.34-9-3"></path><path d="M3 5v14c0 1.66 4 3 9 3s9-1.34 9-3V5"></path><path d="M12 22v-7"></path></svg></span>
       <span class="nb-label">Database editor</span>
       <span class="nb-sub">Manage card data</span>
     </button>
     <button class="nav-btn" role="tab" aria-selected="false" onclick="showTab('d')" id="tab-d">
-      <span class="nav-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><rect x="2" y="5" width="20" height="14" rx="2"></rect><path d="M2 10h20"></path></svg></span>
       <span class="nb-label">My cards</span>
       <span class="nb-sub">Save your wallet</span>
     </button>
     <button class="nav-btn" role="tab" aria-selected="false" onclick="showTab('e')" id="tab-e">
-      <span class="nav-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><circle cx="12" cy="12" r="3"></circle><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z"></path></svg></span>
       <span class="nb-label">How it works</span>
       <span class="nb-sub">Methodology &amp; trust</span>
     </button>
     <button class="nav-btn" role="tab" aria-selected="false" onclick="showTab('f')" id="tab-f">
-      <span class="nav-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><circle cx="11" cy="11" r="8"></circle><line x1="21" y1="21" x2="16.65" y2="16.65"></line><path d="M11 8v3l2 2"></path></svg></span>
       <span class="nb-label">Tracker</span>
       <span class="nb-sub">Log spends · watch caps</span>
     </button>
   </nav>
-    </div>
-    <div class="hero-prefs-wrapper">
-      <!-- Global prefs (shown on A + B tabs) -->
-  <div class="prefs" style="margin:0;padding:0;background:transparent;width:100%" id="prefs-bar" aria-label="Global preferences">
-    <div class="pref-col" style="flex-direction:row;align-items:center">
+
+  <!-- Global prefs (shown on A + B tabs) -->
+  <div class="prefs" id="prefs-bar" aria-label="Global preferences">
+    <div class="pref-col">
       <span class="pref-lbl">Reward preference</span>
       <div class="ptog">
         <button class="ptog-btn active" onclick="setPref('rewardType','any',this)">Any</button>
         <button class="ptog-btn" onclick="setPref('rewardType','cashback',this)">Cashback only</button>
         <button class="ptog-btn" onclick="setPref('rewardType','miles',this)">Travel points</button>
       </div>
-    </div>
-    
-<div class="hero-trust">
-<span>Join 500+ cardholders saving smarter</span>
-<span>No sponsored rankings</span>
-<span>Methodology shown for every number</span>
-</div>
-</div>
-
-<div class="proof">
-<div class="proof-inner">
-<div class="proof-stat"><b>12+</b><span>India cards, fully modelled</span></div>
-<div class="proof-stat"><b>8</b><span>spend categories incl. UPI & rent</span></div>
-<div class="proof-stat"><b>₹0</b><span>core optimizer: free forever</span></div>
-<div class="proof-stat"><b>0</b><span>bank sponsorships</span></div>
-</div>
-
-<main class="shell" id="app" style="margin-top:40px">
-
-
-
-
     </div>
     <div class="pref-col">
       <span class="pref-lbl">Reward points redemption method</span>
@@ -1089,22 +786,22 @@ input[type=range]{width:100%;accent-color:var(--navy);}
         <p style="font-size:13px;line-height:1.75;color:var(--slate);margin-bottom:1rem">Finding the right card is free for everyone — no login needed. Signing in (also free) saves your data and unlocks tracking. Pro adds automation and the reconciliation engine.</p>
         <div style="overflow-x:auto">
         <table style="width:100%;border-collapse:collapse;font-size:12px">
-          <tr style="background:var(--surface2)"><th style="text-align:left;padding:8px 10px">Feature</th><th style="padding:8px 6px">Free</th><th style="padding:8px 6px;color:var(--gold)">Pro ₹499/yr</th><th style="padding:8px 6px;color:#fff;background:var(--navy);border-radius:4px">Pro+ ₹999/yr</th></tr>
-          <tr><td style="padding:7px 10px">Category ranker (which card for which spend)</td><td style="text-align:center">✅</td><td style="text-align:center">✅</td><td style="text-align:center">✅</td></tr>
-          <tr><td style="padding:7px 10px">Eligibility & "should I get this card?"</td><td style="text-align:center">✅</td><td style="text-align:center">✅</td><td style="text-align:center">✅</td></tr>
-          <tr><td style="padding:7px 10px">Full wallet optimizer (unlimited cards)</td><td style="text-align:center">—</td><td style="text-align:center">✅</td><td style="text-align:center">✅</td></tr>
-          <tr><td style="padding:7px 10px">Transaction tracker + monthly reports</td><td style="text-align:center">—</td><td style="text-align:center">✅</td><td style="text-align:center">✅</td></tr>
+          <tr style="background:var(--surface2)"><th style="text-align:left;padding:8px 10px">Feature</th><th style="padding:8px 6px">No login</th><th style="padding:8px 6px">Free account</th><th style="padding:8px 6px;color:var(--gold)">Pro ₹399/yr</th></tr>
+          <tr><td style="padding:7px 10px">Card recommendations & optimizer</td><td style="text-align:center">✅</td><td style="text-align:center">✅</td><td style="text-align:center">✅</td></tr>
+          <tr><td style="padding:7px 10px">Eligibility & "should I get a card"</td><td style="text-align:center">✅</td><td style="text-align:center">✅</td><td style="text-align:center">✅</td></tr>
+          <tr><td style="padding:7px 10px">Save wallet & sync across devices</td><td style="text-align:center">—</td><td style="text-align:center">✅</td><td style="text-align:center">✅</td></tr>
+          <tr><td style="padding:7px 10px">Transaction tracking & monthly report</td><td style="text-align:center">—</td><td style="text-align:center">✅</td><td style="text-align:center">✅</td></tr>
           <tr><td style="padding:7px 10px">SMS-paste logging</td><td style="text-align:center">—</td><td style="text-align:center">✅</td><td style="text-align:center">✅</td></tr>
-          <tr><td style="padding:7px 10px">Points & payment reminders (5 cards)</td><td style="text-align:center">—</td><td style="text-align:center">✅</td><td style="text-align:center">✅</td></tr>
-          <tr><td style="padding:7px 10px">Data export</td><td style="text-align:center">—</td><td style="text-align:center">✅</td><td style="text-align:center">✅</td></tr>
+          <tr><td style="padding:7px 10px">Points & payment reminders</td><td style="text-align:center">—</td><td style="text-align:center">✅ (5 cards)</td><td style="text-align:center">✅ unlimited</td></tr>
+          <tr><td style="padding:7px 10px">Data export & referrals</td><td style="text-align:center">—</td><td style="text-align:center">✅</td><td style="text-align:center">✅</td></tr>
           <tr><td style="padding:7px 10px">Gmail auto-sync</td><td style="text-align:center">—</td><td style="text-align:center">—</td><td style="text-align:center">✅</td></tr>
           <tr><td style="padding:7px 10px">Reconciliation & dispute letters</td><td style="text-align:center">—</td><td style="text-align:center">—</td><td style="text-align:center">✅</td></tr>
           <tr><td style="padding:7px 10px">Automated email alerts</td><td style="text-align:center">—</td><td style="text-align:center">—</td><td style="text-align:center">✅</td></tr>
-          <tr><td style="padding:7px 10px">Family sharing (3 accounts) + priority support</td><td style="text-align:center">—</td><td style="text-align:center">—</td><td style="text-align:center">✅</td></tr>
+          <tr><td style="padding:7px 10px">Priority support</td><td style="text-align:center">—</td><td style="text-align:center">—</td><td style="text-align:center">✅</td></tr>
         </table>
         </div>
         <div style="margin-top:1rem;padding:.75rem 1rem;background:var(--green-bg);border-radius:8px;font-size:12px;color:var(--green-text)">
-          The category ranker is free forever. Pro (₹499/yr) unlocks full wallet optimizer, tracking, reports — saves the average user ₹3,000–₹8,000/year. Pro+ (₹999/yr) adds full automation. Both include a free trial and clear refund policy.
+          Everything you use on the free tier stays free forever. Pro is a 7-day free trial, ₹399/year after, with a clear refund policy — a fraction of SaveSage's ₹14,000+ premium tiers.
         </div>
       </div>
 
@@ -1132,8 +829,8 @@ input[type=range]{width:100%;accent-color:var(--navy);}
         <p style="font-size:13px;line-height:1.75;color:var(--slate);margin-bottom:1rem">We're a pure-software product with no bank sponsorships and no merchant deals to negotiate. We make money three ways, and none of them bends the advice you get:</p>
         <div style="display:flex;flex-direction:column;gap:.75rem">
           <div style="border-left:3px solid var(--gold);padding:.5rem 0 .5rem .875rem">
-            <div style="font-size:13px;font-weight:600;color:var(--navy)">1. Pro subscription — ₹499/year</div>
-            <div style="font-size:12px;color:var(--slate);line-height:1.55">Pro unlocks the full optimizer and tracking. Pro+ adds Gmail automation and reconciliation. ~99% margin — pure software, no inventory, no merchant deals.</div>
+            <div style="font-size:13px;font-weight:600;color:var(--navy)">1. Pro subscription — ₹399/year</div>
+            <div style="font-size:12px;color:var(--slate);line-height:1.55">Automation and the reconciliation engine. A fraction of what others charge. Everything essential stays free.</div>
           </div>
           <div style="border-left:3px solid var(--gold);padding:.5rem 0 .5rem .875rem">
             <div style="font-size:13px;font-weight:600;color:var(--navy)">2. Referral fees on card applications</div>
@@ -1407,199 +1104,6 @@ input[type=range]{width:100%;accent-color:var(--navy);}
 
 </main>
 
-<section style="background:var(--surface)">
-<div class="wrap">
-<div style="display:flex;flex-wrap:wrap;gap:40px;align-items:center">
-<div style="flex:1;min-width:300px">
-<div class="eyebrow">Everything you need</div>
-<h2 class="sec" style="text-align:left">Your complete credit card toolkit</h2>
-<p class="sec-sub" style="text-align:left;margin-left:0;max-width:100%">No app to download. Works directly in your browser.</p>
-<div class="feat-grid">
-<div class="feat"><div class="fi">🎯</div><div><h3>Single category</h3><p>Best card for one spend type.</p></div></div>
-<div class="feat"><div class="fi">🧮</div><div><h3>Wallet optimizer</h3><p>Best 1-3 card combo.</p></div></div>
-<div class="feat"><div class="fi">✏️</div><div><h3>Database editor</h3><p>Manage card data.</p></div></div>
-<div class="feat"><div class="fi">💼</div><div><h3>My cards</h3><p>Save your wallet.</p></div></div>
-<div class="feat"><div class="fi">🔍</div><div><h3>How it works</h3><p>Methodology & trust.</p></div></div>
-<div class="feat"><div class="fi">📊</div><div><h3>Tracker</h3><p>Log spends · watch caps.</p></div></div>
-</div>
-</div>
-<div style="flex:1;min-width:300px;text-align:center">
-<img src="/savesageclone1/mockup.png" alt="CardIQ Dashboard Interface" style="max-width:100%;border-radius:16px;box-shadow:0 20px 40px rgba(10,22,40,0.15)">
-</div>
-</div>
-</div>
-</section>
-
-<section>
-<div class="wrap">
-<div class="eyebrow">The problem</div>
-<h2 class="sec">Reward maths is deliberately confusing</h2>
-<p class="sec-sub">Banks make it hard to know what you actually earn. That's the point. Here's what trips everyone up.</p>
-<div class="problem-grid">
-<div class="problem-card"><div class="icon">🧢</div><h3>Hidden caps</h3><p>Your "5% card" quietly stops at ₹1,000/month across all categories combined. Most people never notice they've hit the ceiling.</p></div>
-<div class="problem-card"><div class="icon">🚫</div><h3>Silent exclusions</h3><p>Rent, fuel, wallet loads, and EMIs often earn nothing: but the card's headline rate never mentions it.</p></div>
-<div class="problem-card"><div class="icon">💸</div><h3>Fees that erase rewards</h3><p>A ₹2,500 fee + 18% GST can wipe out a year of rewards: unless you hit the waiver threshold, which changes the math entirely.</p></div>
-</div>
-</div>
-</section>
-
-<section id="how" style="background:var(--surface2)">
-<div class="wrap">
-<div class="eyebrow">How it works</div>
-<h2 class="sec">See exactly how you benefit</h2>
-<p class="sec-sub">We do the hard math. You get the maximum cashback.</p>
-<div class="rp-grid">
-    <div class="rp-card">
-        <div class="rp-header">Example 1: The Cashback Saver</div>
-        <div class="rp-body">
-            <div class="rp-step">
-                <div class="rp-label">You Enter</div>
-                <div class="rp-val">₹10,000 on Swiggy<br>₹5,000 on Fuel</div>
-            </div>
-            <div class="rp-step">
-                <div class="rp-label">We Calculate</div>
-                <div class="rp-val bad">SBI Cashback caps at ₹2,000.<br>Axis Ace excludes fuel.</div>
-            </div>
-            <div class="rp-step">
-                <div class="rp-label">You Get</div>
-                <div class="rp-val"><strong>Use HDFC Swiggy</strong> for food.<br><strong>Get BPCL Card</strong> for fuel.</div>
-            </div>
-        </div>
-    </div>
-    
-    <div class="rp-card">
-        <div class="rp-header">Example 2: The Travel Maximizer</div>
-        <div class="rp-body">
-            <div class="rp-step">
-                <div class="rp-label">You Enter</div>
-                <div class="rp-val">₹40,000 on Flights</div>
-            </div>
-            <div class="rp-step">
-                <div class="rp-label">We Calculate</div>
-                <div class="rp-val bad">Your current card gives 1% (₹400).<br>Premium travel cards give 5x miles.</div>
-            </div>
-            <div class="rp-step">
-                <div class="rp-label">You Get</div>
-                <div class="rp-val"><strong>Use Axis Atlas</strong> to earn 2,000 miles (worth ₹2,000).</div>
-            </div>
-        </div>
-    </div>
-</div>
-</div>
-</section>
-
-
-
-<section>
-<div class="wrap-narrow">
-<div class="privacy-box">
-<h2>Radically <span class="gold">honest</span> about your data</h2>
-<p>Start without an email. The core tool requires no login. Your data stays in your browser.</p>
-<div class="privacy-list">
-<span>Core optimizer works with zero login</span>
-<span>We only ever read bank-sender emails</span>
-<span>Delete everything with one click</span>
-</div>
-</div>
-</div>
-</section>
-
-<section id="pricing" style="background:var(--surface)">
-<div class="wrap">
-<div class="eyebrow">Pricing</div>
-<h2 class="sec">Plans that pay for themselves in month one</h2>
-<p class="sec-sub">The average CardIQ user saves ₹3,000–₹8,000/year in optimized rewards. Every plan includes a free trial and a clear refund policy.</p>
-<div class="price-grid" style="grid-template-columns:repeat(3,1fr);max-width:960px">
-<div class="price-card">
-<h3>Free</h3>
-<div class="price-amount">₹0<small> forever</small></div>
-<ul>
-<li>Category-wise card ranker</li>
-<li>See which card earns most per ₹100</li>
-<li>"Should I get this card?" checker</li>
-<li>No login, no email, instant use</li>
-</ul>
-<a class="btn-secondary" href="#app" style="display:block;text-align:center;color:var(--navy);border-color:var(--border)">Try free →</a>
-</div>
-<div class="price-card pro" style="border:2px solid var(--gold);position:relative">
-<div class="price-tag">MOST POPULAR</div>
-<h3>Pro</h3>
-<div class="price-amount">₹499<small>/year</small></div>
-<div style="font-size:11px;color:var(--green-text);margin-top:-8px;margin-bottom:12px">₹42/month: less than one Swiggy order</div>
-<ul>
-<li>Everything in Free</li>
-<li>Full wallet optimizer (unlimited cards)</li>
-<li>Transaction tracker + monthly reports</li>
-<li>SMS-paste logging</li>
-<li>Points-expiry + payment reminders</li>
-<li>Data export</li>
-<li>7-day free trial</li>
-</ul>
-<a class="btn-primary" href="#app" style="display:block;text-align:center">Start 7-day trial →</a>
-</div>
-<div class="price-card" style="background:var(--navy);color:#fff;border-radius:16px">
-<div class="price-tag" style="background:#fff;color:var(--navy)">MAX SAVINGS</div>
-<h3 style="color:#fff">Pro+</h3>
-<div class="price-amount" style="color:#fff">₹999<small style="color:rgba(255,255,255,.6)">/year</small></div>
-<div style="font-size:11px;color:rgba(255,255,255,.55);margin-top:-8px;margin-bottom:12px">₹83/month · CRED Pro charges the same with less</div>
-<ul style="color:rgba(255,255,255,.85)">
-<li>Everything in Pro</li>
-<li>Gmail auto-sync: zero manual entry</li>
-<li>Reconciliation + dispute letters</li>
-<li>Automated email alerts</li>
-<li>Family sharing (up to 3 accounts)</li>
-<li>Priority support</li>
-<li>14-day free trial</li>
-</ul>
-<a class="btn-primary" href="#app" style="display:block;text-align:center;background:#fff;color:var(--navy)">Start 14-day trial →</a>
-</div>
-</div>
-<p style="text-align:center;margin-top:20px;font-size:13px;color:var(--slate)">No bank login required. No data sold. All plans come with a clear refund policy. Cancel anytime.</p>
-</div>
-</section>
-
-<section>
-<div class="wrap-narrow">
-<div class="eyebrow">Questions</div>
-<h2 class="sec">Frequently asked</h2>
-<div class="faq-item"><h3>Do I need to give you my bank login?</h3><p>No. The core optimizer needs no login at all. Even Pro only ever reads emails from known bank senders: never your bank account credentials.</p></div>
-<div class="faq-item"><h3>Is this really free?</h3><p>Yes. The category ranker is 100% free forever: see which card earns the most for any purchase category, instantly, no login needed. Pro (₹499/year) unlocks the full wallet optimizer, tracking, and reports. Pro+ (₹999/year) adds Gmail sync, reconciliation, and auto-alerts.</p></div>
-<div class="faq-item"><h3>How is this different from a comparison website?</h3><p>Comparison sites rank cards by the commission they earn. We rank by the real rupee value you receive after caps, exclusions, fees, and milestones: and we take no bank sponsorships.</p></div>
-<div class="faq-item"><h3>Is it an app?</h3><p>No: it's a website that works in any browser, including your phone. Nothing to download.</p></div>
-<div class="faq-item"><h3>Can it tell me NOT to get a new card?</h3><p>Yes, and it often does. If your current wallet is already near-optimal, we say so rather than pushing you toward another application.</p></div>
-</div>
-</section>
-
-<div class="wrap-narrow">
-<div class="final">
-<h2>Find your best card now</h2>
-<p>Free, no login, 30 seconds.</p>
-<a class="btn-primary" href="#app">Run the optimizer →</a>
-</div>
-</div>
-
-<footer>
-<div class="wrap">
-<div>
-<a href="/savesageclone1/best/dining/">Best cards</a>
-<a href="/savesageclone1/#pricing">Pricing</a>
-<a href="/savesageclone1/privacy.html">Privacy</a>
-<a href="#app">Open the tool</a>
-</div>
-<div>© 2026 CardIQ · Independent · No bank sponsorships</div>
-</div>
-</footer>
-
-<script type="application/ld+json">
-{"@context":"https://schema.org","@type":"FAQPage","mainEntity":[
-{"@type":"Question","name":"Do I need to give CardIQ my bank login?","acceptedAnswer":{"@type":"Answer","text":"No. The core optimizer needs no login. Pro only reads emails from known bank senders, never bank credentials."}},
-{"@type":"Question","name":"Is CardIQ free?","acceptedAnswer":{"@type":"Answer","text":"Yes. The category ranker is 100% free forever. Pro (₹499/year) adds the full wallet optimizer, tracking, and reports. Pro+ (₹999/year) adds Gmail sync, reconciliation, and auto-alerts."}},
-{"@type":"Question","name":"How is CardIQ different from a comparison website?","acceptedAnswer":{"@type":"Answer","text":"CardIQ ranks by real rupee value after caps, exclusions, fees and milestones, and takes no bank sponsorships."}}
-]}
-</script>
-
-
-
 <script>
 /* ════════════════════════════════════════
    SUPABASE CONNECTION
@@ -1679,13 +1183,13 @@ const spendB={...CAT_DEFAULTS};
    - 'anon' : no login. Full recommendation engine, session-only (nothing saved).
    - 'free' : logged in. Everything anon has + persistence, tracking, reports,
               manual reminders (≤5 cards), export, referrals.
-   - 'pro'  : paid ₹499/yr (Pro) or ₹999/yr (Pro+). + Gmail sync, reconciliation, auto-alerts,
+   - 'pro'  : paid ₹399/yr. + Gmail sync, reconciliation, auto-alerts,
               unlimited cards, priority support.
    This is a client-side simulation of the account system; when the Supabase
    backend is connected, session.user + subscriptions table drive `account`.
 ════════════════════════════════════════ */
 const account={
-  status:'anon',            // 'anon' | 'free' | 'pro' | 'proplus'
+  status:'anon',            // 'anon' | 'free' | 'pro'
   email:null,
   userId:null,              // Supabase user id when signed in for real
   MAX_FREE_TRACKED:5        // free tier: up to 5 tracked cards for reminders
@@ -1727,7 +1231,7 @@ const FAILURE_LESSONS=[
 /* ════════════════════════════════════════
    REVENUE MODEL  (pure software, ~90% margin, no inventory)
    Three streams, none of which require negotiating with banks/merchants:
-     1. SUBSCRIPTION — Pro at ₹499/yr, Pro+ at ₹999/yr (undercuts SaveSage; volume play, not price)
+     1. SUBSCRIPTION — Pro at ₹399/yr (undercuts SaveSage; volume play, not price)
      2. AFFILIATE    — commission when a user we ALREADY recommend a card applies.
                        CRITICAL RULE: affiliate NEVER changes ranking. Links appear
                        only on cards the engine independently ranked. This is the moat.
@@ -1746,35 +1250,14 @@ const AFFILIATE = {
 };
 function affiliateFor(cardId){return AFFILIATE[cardId]||{available:false,est:0};}
 // Apply link — in production this is your tracked affiliate URL per bank.
-// Bank application URLs — replace with your tracked affiliate links in production
-const BANK_APPLY_URLS = {
-  0: 'https://www.hdfcbank.com/personal/pay/cards/credit-cards',  // HDFC
-  1: 'https://www.hdfcbank.com/personal/pay/cards/credit-cards',
-  2: 'https://www.sbicard.com/en/personal/credit-cards.page',
-  3: 'https://www.sbicard.com/en/personal/credit-cards.page',
-  4: 'https://www.axisbank.com/retail/cards/credit-card',
-  5: 'https://www.axisbank.com/retail/cards/credit-card',
-  6: 'https://www.idfcfirstbank.com/credit-card',
-  7: 'https://www.idfcfirstbank.com/credit-card',
-  8: 'https://www.icicibank.com/card/credit-cards',
-  9: 'https://www.kotak.com/en/personal-banking/cards/credit-cards.html',
-  10: 'https://www.axisbank.com/retail/cards/credit-card',
-  11: 'https://www.hdfcbank.com/personal/pay/cards/credit-cards'
-};
-
 function affiliateApply(cardId){
   const card=DB.find(c=>c.id===cardId);if(!card)return;
   const aff=affiliateFor(cardId);
+  if(!aff.available){toastC(`${card.name} has no direct apply link — search "${card.name} apply" on the bank site.`);return;}
   // record intent locally (for conversion analytics when backend is connected)
   try{const log=JSON.parse(localStorage.getItem('cardiq_apply_intent')||'[]');log.push({cardId,at:new Date().toISOString()});localStorage.setItem('cardiq_apply_intent',JSON.stringify(log));}catch(e){}
-  
-  if(aff.available){
-    toastC(\`Opening \${card.name} application… (CardIQ earns a referral fee only if you're approved — it never changes our ranking.)\`);
-  } else {
-    toastC(\`Opening \${card.bank} cards page — search for \${card.name}.\`);
-  }
-  const url = BANK_APPLY_URLS[cardId] || \`https://www.google.com/search?q=\${encodeURIComponent(card.name+' apply online')}\`;
-  window.open(url, '_blank');
+  toastC(`Opening ${card.name} application… (CardIQ earns a referral fee only if you're approved — it never changes our ranking.)`);
+  // window.open(TRACKED_AFFILIATE_URL[cardId], '_blank');  // wire real URL in production
 }
 
 // Gift-card redemption partners (referral cut, no inventory held).
@@ -1786,20 +1269,18 @@ const REDEMPTION_PARTNERS=[
   {name:'BookMyShow',rate:0.05,minPts:300}
 ];
 function isLoggedIn(){return account.status==='free'||account.status==='pro';}
-function isPro(){return account.status==='pro'||account.status==='proplus';}
+function isPro(){return account.status==='pro';}
 
 // Which features require which layer. Used by gate().
 const FEATURE_TIER={
-  // free (no login): category ranker + eligibility only
-  // pro (₹499/yr): full wallet optimizer, tracking, reports, reminders
-  saveWallet:'pro', tracking:'pro', monthlyReport:'pro', smsLog:'pro',
-  manualReminders:'pro', dataExport:'pro', referrals:'pro',
-  walletOptimizer:'pro', transactionTracker:'pro',
-  // pro+ (₹999/yr): automation, reconciliation, gmail, family
-  gmailSync:'proplus', reconciliation:'proplus', autoAlerts:'proplus',
-  unlimitedCards:'proplus', prioritySupport:'proplus', familySharing:'proplus'
+  // free-after-login (persistence & tracking)
+  saveWallet:'free', tracking:'free', monthlyReport:'free', smsLog:'free',
+  manualReminders:'free', dataExport:'free', referrals:'free',
+  // pro-only (recurring high-value / cost-to-serve)
+  gmailSync:'pro', reconciliation:'pro', autoAlerts:'pro',
+  unlimitedCards:'pro', prioritySupport:'pro'
 };
-function tierRank(t){return t==='proplus'?3:t==='pro'?2:t==='free'?1:0;}
+function tierRank(t){return t==='pro'?2:t==='free'?1:0;}
 function hasAccessTo(feature){
   const need=FEATURE_TIER[feature]||'anon';
   const have=account.status;
@@ -1809,10 +1290,8 @@ function hasAccessTo(feature){
 function gate(feature){
   if(hasAccessTo(feature))return true;
   const need=FEATURE_TIER[feature]||'anon';
-  if(need==='proplus'){showUpgradePrompt(feature, 'proplus');}
-  else if(need==='pro'){showUpgradePrompt(feature, 'pro');}
-  else if(need==='free'&&!isLoggedIn()){showLoginPrompt(feature);}
-  else{showUpgradePrompt(feature, 'pro');}
+  if(need==='free'&&!isLoggedIn()){showLoginPrompt(feature);}
+  else{showUpgradePrompt(feature);}
   return false;
 }
 
@@ -1820,11 +1299,9 @@ function gate(feature){
 const FEATURE_NAMES={
   saveWallet:'save your wallet across devices',tracking:'transaction tracking & history',
   monthlyReport:'monthly reports',smsLog:'SMS-paste logging',manualReminders:'points & payment reminders',
-  dataExport:'data export',referrals:'referrals',walletOptimizer:'full wallet optimizer',
-  transactionTracker:'transaction tracker',gmailSync:'Gmail auto-sync',
+  dataExport:'data export',referrals:'referrals',gmailSync:'Gmail auto-sync',
   reconciliation:'reward reconciliation & dispute letters',autoAlerts:'automated email alerts',
-  unlimitedCards:'unlimited tracked cards',prioritySupport:'priority support',
-  familySharing:'family sharing (up to 3 accounts)'
+  unlimitedCards:'unlimited tracked cards',prioritySupport:'priority support'
 };
 
 function showLoginPrompt(feature){
@@ -1855,15 +1332,14 @@ function showUpgradePrompt(feature){
       <div style="font-size:13px;color:var(--slate)">This is a Pro feature — the automation and analysis that save you the most money each month.</div>
     </div>
     <div style="background:var(--surface2);border-radius:12px;padding:1rem 1.25rem;margin-bottom:1.25rem">
-      <div style="display:flex;align-items:baseline;gap:6px;margin-bottom:.75rem"><span style="font-family:'DM Serif Display',serif;font-size:32px;color:var(--navy)">₹149</span><span style="font-size:13px;color:var(--slate)">/year</span><span style="margin-left:auto;font-size:11px;color:var(--gold);background:rgba(201,168,76,.15);padding:2px 8px;border-radius:99px;border:1px solid rgba(201,168,76,.3)">FOUNDING MEMBER</span></div>
+      <div style="display:flex;align-items:baseline;gap:6px;margin-bottom:.75rem"><span style="font-family:'DM Serif Display',serif;font-size:32px;color:var(--navy)">₹399</span><span style="font-size:13px;color:var(--slate)">/year</span><span style="margin-left:auto;font-size:11px;color:var(--green-text);background:var(--green-bg);padding:2px 8px;border-radius:99px">Undercuts SaveSage's ₹399</span></div>
       <div style="font-size:12px;color:var(--slate);line-height:1.9">
         ✓ Gmail auto-sync — no manual entry<br>
         ✓ Reconciliation — did the bank actually pay you?<br>
         ✓ Auto email alerts for expiry & payments<br>
         ✓ Unlimited tracked cards<br>
         ✓ Dispute letter generator<br>
-        ✓ Priority support · 7-day free trial<br>
-        ✓ This price is locked forever — never increases for you
+        ✓ Priority support · 7-day free trial
       </div>
     </div>
     ${needLogin?`
@@ -1939,13 +1415,13 @@ function finishLogin(targetPlan){
   if(active)active.click();
 }
 
-async function doUpgrade(tier){
+async function doUpgrade(){
   if(backendReady() && account.userId){
     // In production this happens via the Razorpay webhook server-side.
     // Here we optimistically flip; the webhook is the source of truth.
     try{ await sb.from('profiles').update({ plan:'pro' }).eq('id', account.userId); }catch(e){}
   }
-  account.status=tier||'pro'; persistAccount(); closeAuthModal(); updateAccountUI();
+  account.status='pro'; persistAccount(); closeAuthModal(); updateAccountUI();
   toastC('Pro trial started — all features unlocked');
 }
 
