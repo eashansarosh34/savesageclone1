@@ -557,40 +557,64 @@
                 <p>The average user saves ₹3,000–₹8,000/year in optimized rewards.</p>
             </div>
             
+            
             <div style="display:grid;grid-template-columns:repeat(3, 1fr);gap:24px;margin-bottom:80px;">
-                <div class="pricing-card">
-                    <h3 style="font-size:24px;margin-bottom:8px;">Free</h3>
-                    <div style="font-size:32px;font-family:var(--font-heading);color:var(--text-primary);margin-bottom:24px;">₹0</div>
-                    <ul style="list-style:none;margin-bottom:24px;color:var(--text-secondary);font-size:15px;line-height:2;flex:1;">
-                        <li>✓ Category ranker</li>
-                        <li>✓ "Should I get this card?"</li>
-                        <li>✓ No login needed</li>
+                <!-- Free -->
+                <div class="pricing-card pricing-free">
+                    <h3 style="font-size:24px;margin-bottom:8px;color:#a9c2f0;background:#a9c2f0;display:inline-block;padding:2px 8px;border-radius:4px;color:#fff;">Free</h3>
+                    <div style="font-size:48px;font-family:var(--font-heading);color:#a9c2f0;margin-bottom:24px;background:#a9c2f0;display:inline-block;padding:4px 12px;border-radius:4px;color:#fff;">₹0<span style="font-size:16px;"> forever</span></div>
+                    <ul style="list-style:none;margin-bottom:24px;font-size:15px;line-height:2.5;flex:1;">
+                        <li>✓ <span style="background:#d8e5ff;padding:2px 6px;">Category-wise card ranker</span></li>
+                        <li>✓ <span style="background:#d8e5ff;padding:2px 6px;">See which card earns most per ₹100</span></li>
+                        <li>✓ <span style="background:#d8e5ff;padding:2px 6px;">"Should I get this card?" checker</span></li>
+                        <li>✓ <span style="background:#d8e5ff;padding:2px 6px;">No login, no email, instant use</span></li>
                     </ul>
+                    <div style="text-align:center;">
+                        <a href="javascript:void(0)" onclick="showTab('a'); window.scrollTo(0,0);" style="display:inline-block;background:#a9c2f0;color:#fff;padding:8px 24px;text-decoration:none;font-weight:600;border-radius:4px;">Try free →</a>
+                    </div>
                 </div>
                 
+                <!-- Pro -->
                 <div class="pricing-card pricing-pro">
-                    <div class="pricing-badge">Most Popular</div>
-                    <h3 style="font-size:24px;margin-bottom:8px;">Pro</h3>
-                    <div style="font-size:32px;font-family:var(--font-heading);color:var(--accent-blue);margin-bottom:24px;">₹499<span style="font-size:16px;color:var(--text-muted);">/yr</span></div>
-                    <ul style="list-style:none;margin-bottom:24px;color:var(--text-primary);font-size:15px;line-height:2;flex:1;">
-                        <li>✓ Full wallet optimizer</li>
-                        <li>✓ Transaction tracker + reports</li>
-                        <li>✓ SMS logging + reminders</li>
-                        <li>✓ Data export</li>
+                    <div class="pricing-badge">MOST POPULAR</div>
+                    <h3 style="font-size:24px;margin-bottom:8px;color:#a9c2f0;background:#a9c2f0;display:inline-block;padding:2px 8px;border-radius:4px;color:#fff;">Pro</h3>
+                    <div style="font-size:48px;font-family:var(--font-heading);color:#a9c2f0;margin-bottom:8px;background:#a9c2f0;display:inline-block;padding:4px 12px;border-radius:4px;color:#fff;">₹499<span style="font-size:16px;">/year</span></div>
+                    <div style="font-size:13px;color:#a9c2f0;margin-bottom:24px;background:#d8e5ff;display:inline-block;padding:2px 6px;">₹42/month: less than one Swiggy order</div>
+                    <ul style="list-style:none;margin-bottom:24px;font-size:15px;line-height:2.5;flex:1;">
+                        <li>✓ <span style="background:#d8e5ff;padding:2px 6px;">Everything in Free</span></li>
+                        <li>✓ <span style="background:#d8e5ff;padding:2px 6px;">Full wallet optimizer (unlimited cards)</span></li>
+                        <li>✓ <span style="background:#d8e5ff;padding:2px 6px;">Transaction tracker + monthly reports</span></li>
+                        <li>✓ <span style="background:#d8e5ff;padding:2px 6px;">SMS-paste logging</span></li>
+                        <li>✓ <span style="background:#d8e5ff;padding:2px 6px;">Points-expiry + payment reminders</span></li>
+                        <li>✓ <span style="background:#d8e5ff;padding:2px 6px;">Data export</span></li>
+                        <li>✓ <span style="background:#d8e5ff;padding:2px 6px;">7-day free trial</span></li>
                     </ul>
+                    <div style="text-align:center;">
+                        <a href="javascript:void(0)" onclick="showTab('b'); window.scrollTo(0,0);" style="display:inline-block;background:#a9c2f0;color:#fff;padding:8px 24px;text-decoration:none;font-weight:600;border-radius:4px;">Start 7-day trial →</a>
+                    </div>
                 </div>
                 
+                <!-- Pro+ -->
                 <div class="pricing-card pricing-pro-plus">
-                    <h3 style="font-size:24px;margin-bottom:8px;">Pro+</h3>
-                    <div style="font-size:32px;font-family:var(--font-heading);color:var(--accent-purple);margin-bottom:24px;">₹999<span style="font-size:16px;color:var(--text-muted);">/yr</span></div>
-                    <ul style="list-style:none;margin-bottom:24px;color:var(--text-secondary);font-size:15px;line-height:2;flex:1;">
-                        <li>✓ Everything in Pro</li>
-                        <li>✓ Gmail auto-sync</li>
-                        <li>✓ Reconciliation + disputes</li>
-                        <li>✓ Family sharing (3 accounts)</li>
+                    <h3 style="font-size:24px;margin-bottom:8px;color:#fff;background:#5e7b9e;display:inline-block;padding:2px 8px;border-radius:4px;">Pro+</h3>
+                    <div style="font-size:48px;font-family:var(--font-heading);color:#fff;margin-bottom:8px;background:#5e7b9e;display:inline-block;padding:4px 12px;border-radius:4px;">₹999<span style="font-size:16px;">/year</span></div>
+                    <div style="font-size:13px;color:#fff;margin-bottom:24px;background:#4a6585;display:inline-block;padding:2px 6px;">₹83/month - CRED Pro charges the same with less</div>
+                    <ul style="list-style:none;margin-bottom:24px;font-size:15px;line-height:2.5;flex:1;">
+                        <li>✓ <span style="background:#4a6585;padding:2px 6px;color:#fff;">Everything in Pro</span></li>
+                        <li>✓ <span style="background:#4a6585;padding:2px 6px;color:#fff;">Gmail auto-sync: zero manual entry</span></li>
+                        <li>✓ <span style="background:#4a6585;padding:2px 6px;color:#fff;">Reconciliation + dispute letters</span></li>
+                        <li>✓ <span style="background:#4a6585;padding:2px 6px;color:#fff;">Automated email alerts</span></li>
+                        <li>✓ <span style="background:#4a6585;padding:2px 6px;color:#fff;">Family sharing (up to 3 accounts)</span></li>
+                        <li>✓ <span style="background:#4a6585;padding:2px 6px;color:#fff;">Priority support</span></li>
+                        <li>✓ <span style="background:#4a6585;padding:2px 6px;color:#fff;">14-day free trial</span></li>
                     </ul>
+                    <div style="text-align:center;">
+                        <a href="javascript:void(0)" onclick="showTab('b'); window.scrollTo(0,0);" style="display:inline-block;background:#c3d8fc;color:#fff;padding:8px 24px;text-decoration:none;font-weight:600;border-radius:4px;">Start 14-day trial →</a>
+                    </div>
                 </div>
             </div>
+            
+            <div style="text-align:center;font-size:13px;color:#a9c2f0;background:#4a6585;display:inline-block;padding:4px 12px;margin:0 auto;width:100%;max-width:600px;display:block;">No bank login required. No data sold. All plans come with a clear refund policy. Cancel anytime.</div>
 
             <div class="panel-header">
                 <h2>Questions?</h2>
@@ -632,7 +656,7 @@
 <li>"Should I get this card?" checker</li>
 <li>No login, no email, instant use</li>
 </ul>
-<a class="btn-secondary" href="/savesageclone1/app.html" style="display:block;text-align:center;color:var(--navy);border-color:var(--border)">Try free →</a>
+<a class="btn-secondary" href="javascript:void(0)" onclick="showTab('b'); window.scrollTo(0,0);" style="display:block;text-align:center;color:var(--navy);border-color:var(--border)">Try free →</a>
 </div>
 <div class="price-card pro" style="border:2px solid var(--gold);position:relative">
 <div class="price-tag">MOST POPULAR</div>
@@ -687,7 +711,7 @@
 <div class="final">
 <h2>Find your best card now</h2>
 <p>Free, no login, 30 seconds.</p>
-<a class="btn-primary" href="/savesageclone1/app.html">Run the optimizer →</a>
+<a class="btn-primary" href="javascript:void(0)" onclick="showTab('b'); window.scrollTo(0,0);">Run the optimizer →</a>
 </div>
 </div>
 
@@ -806,7 +830,7 @@
 <li>"Should I get this card?" checker</li>
 <li>No login, no email, instant use</li>
 </ul>
-<a class="btn-secondary" href="#app" style="display:block;text-align:center;color:var(--navy);border-color:var(--border)">Try free →</a>
+<a class="btn-secondary" href="javascript:void(0)" onclick="showTab('b'); window.scrollTo(0,0);" style="display:block;text-align:center;color:var(--navy);border-color:var(--border)">Try free →</a>
 </div>
 <div class="price-card pro" style="border:2px solid var(--gold);position:relative">
 <div class="price-tag">MOST POPULAR</div>
@@ -822,7 +846,7 @@
 <li>Data export</li>
 <li>7-day free trial</li>
 </ul>
-<a class="btn-primary" href="#app" style="display:block;text-align:center">Start 7-day trial →</a>
+<a class="btn-primary" href="javascript:void(0)" onclick="showTab('b'); window.scrollTo(0,0);" style="display:block;text-align:center">Start 7-day trial →</a>
 </div>
 <div class="price-card" style="background:var(--navy);color:#fff;border-radius:16px">
 <div class="price-tag" style="background:#fff;color:var(--navy)">MAX SAVINGS</div>
@@ -838,7 +862,7 @@
 <li>Priority support</li>
 <li>14-day free trial</li>
 </ul>
-<a class="btn-primary" href="#app" style="display:block;text-align:center;background:#fff;color:var(--navy)">Start 14-day trial →</a>
+<a class="btn-primary" href="javascript:void(0)" onclick="showTab('b'); window.scrollTo(0,0);" style="display:block;text-align:center;background:#fff;color:var(--navy)">Start 14-day trial →</a>
 </div>
 </div>
 <p style="text-align:center;margin-top:20px;font-size:13px;color:var(--slate)">No bank login required. No data sold. All plans come with a clear refund policy. Cancel anytime.</p>
@@ -861,7 +885,7 @@
 <div class="final">
 <h2>Find your best card now</h2>
 <p>Free, no login, 30 seconds.</p>
-<a class="btn-primary" href="#app">Run the optimizer →</a>
+<a class="btn-primary" href="javascript:void(0)" onclick="showTab('b'); window.scrollTo(0,0);">Run the optimizer →</a>
 </div>
 </div>
 
@@ -871,7 +895,7 @@
 <a href="/savesageclone1/best/dining/">Best cards</a>
 <a href="/savesageclone1/#pricing">Pricing</a>
 <a href="/savesageclone1/privacy.html">Privacy</a>
-<a href="#app">Open the tool</a>
+<a href="javascript:void(0)" onclick="showTab('b'); window.scrollTo(0,0);">Open the tool</a>
 </div>
 <div>© 2026 CardIQ · Independent · No bank sponsorships</div>
 </div>
