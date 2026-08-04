@@ -481,3 +481,83 @@ body {
 }
 
 /* PRICING STYLES ARE INLINE IN HTML */
+
+
+/* --- PRICING GRID --- */
+.pricing-card {
+    border-radius: 16px;
+    padding: 40px 32px;
+    position: relative;
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+    display: flex;
+    flex-direction: column;
+}
+.pricing-card:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 12px 24px rgba(0,0,0,0.4);
+}
+.pricing-free {
+    background: #ffffff;
+    color: #000000;
+    border: 1px solid #e0e0e0;
+}
+.pricing-pro {
+    background: #ffffff;
+    color: #000000;
+    border: 1px solid #e0e0e0;
+}
+.pricing-pro-plus {
+    background: #000000;
+    color: #ffffff;
+    border: 1px solid #333333;
+}
+.pricing-badge {
+    position: absolute;
+    top: -14px;
+    left: 50%;
+    transform: translateX(-50%);
+    background: #a9c2f0;
+    color: #ffffff;
+    font-size: 11px;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    padding: 6px 16px;
+    border-radius: 4px;
+}
+
+/* --- FAQ & FOOTER --- */
+.faq-item {
+    background: var(--bg-surface);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    padding: 24px;
+    margin-bottom: 16px;
+}
+.faq-item h3 {
+    font-size: 18px;
+    margin-bottom: 8px;
+    color: var(--text-primary);
+}
+.faq-item p {
+    color: var(--text-secondary);
+    font-size: 15px;
+    line-height: 1.6;
+}
+.feat {
+    display: flex;
+    gap: 16px;
+    margin-bottom: 24px;
+}
+.feat .fi {
+    font-size: 24px;
+}
+.feat h3 {
+    font-size: 18px;
+    color: var(--text-primary);
+    margin-bottom: 4px;
+}
+.feat p {
+    color: var(--text-secondary);
+    font-size: 14px;
+}
