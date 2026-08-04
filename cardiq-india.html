@@ -422,6 +422,9 @@ input[type=range]{width:100%;accent-color:var(--navy);}
   .rpt-bar-lbl{width:90px;}
 }
 </style>
+<!-- Supabase client library (loaded from CDN). If this fails to load or keys are
+     not configured below, the app falls back to local-only simulated accounts. -->
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 </head>
 <body>
 
@@ -1103,6 +1106,37 @@ input[type=range]{width:100%;accent-color:var(--navy);}
 
 <script>
 /* ════════════════════════════════════════
+   SUPABASE CONNECTION
+   Fill these three values to connect real accounts. Until then, the app runs in
+   "local mode" — accounts are simulated in your browser so you can still test.
+   Get these from: Supabase dashboard → Project Settings → API
+     supabaseUrl  = Project URL
+     supabaseKey  = the "anon / public" key (safe to expose in frontend)
+   And from Google Cloud Console → Credentials → OAuth 2.0 Client ID (for Gmail).
+════════════════════════════════════════ */
+const CARDIQ_CONFIG = {
+  supabaseUrl:    "",   // e.g. "https://xxxx.supabase.co"  — leave "" for local mode
+  supabaseKey:    "",   // your anon/public key
+  googleClientId: "",   // Google OAuth client id (only needed for Gmail sync)
+  functionsBase:  ""    // e.g. "https://xxxx.supabase.co/functions/v1"
+};
+
+// Create the Supabase client if keys are present AND the library loaded.
+// `sb` is null in local mode; every auth function checks for it and falls back.
+let sb = null;
+(function initSupabase(){
+  try{
+    if(CARDIQ_CONFIG.supabaseUrl && CARDIQ_CONFIG.supabaseKey && window.supabase){
+      sb = window.supabase.createClient(CARDIQ_CONFIG.supabaseUrl, CARDIQ_CONFIG.supabaseKey);
+      console.log("CardIQ: connected to Supabase.");
+    } else {
+      console.log("CardIQ: running in LOCAL mode (no Supabase keys set). Accounts are browser-only.");
+    }
+  }catch(e){ console.warn("CardIQ: Supabase init failed, using local mode.", e); sb=null; }
+})();
+function backendReady(){ return !!sb; }
+
+/* ════════════════════════════════════════
    SHARED CONSTANTS
 ════════════════════════════════════════ */
 const CATS=['online','dining','groceries','fuel','utilities','rent','travel','upi'];
@@ -1157,6 +1191,7 @@ const spendB={...CAT_DEFAULTS};
 const account={
   status:'anon',            // 'anon' | 'free' | 'pro'
   email:null,
+  userId:null,              // Supabase user id when signed in for real
   MAX_FREE_TRACKED:5        // free tier: up to 5 tracked cards for reminders
 };
 
@@ -1280,8 +1315,9 @@ function showLoginPrompt(feature){
       ✓ Free forever · ✓ No card required · ✓ Everything you use now stays free
     </div>
     <div class="fg" style="margin-bottom:.75rem"><label>Email</label><input type="email" id="auth-email" placeholder="you@example.com" style="width:100%;padding:9px 11px;border:1px solid var(--border-strong);border-radius:8px"></div>
+    <div class="fg" style="margin-bottom:.75rem"><label>Password</label><input type="password" id="auth-pass" placeholder="At least 6 characters" style="width:100%;padding:9px 11px;border:1px solid var(--border-strong);border-radius:8px"></div>
     <button class="btn-run" onclick="doLogin('free')" style="width:100%;margin-bottom:.5rem">Create free account →</button>
-    <div style="text-align:center;font-size:12px;color:var(--slate)">Already have an account? <a href="#" onclick="doLogin('free');return false" style="color:var(--blue)">Sign in</a></div>
+    <div style="text-align:center;font-size:12px;color:var(--slate)">Same button signs you in if you already have an account.</div>
     <div style="margin-top:1rem;padding-top:1rem;border-top:1px solid var(--border);text-align:center;font-size:11px;color:var(--slate)">We only ever store what you choose to save. <a href="#" onclick="showTab('e');closeAuthModal();return false" style="color:var(--blue)">Privacy details</a></div>`;
   document.getElementById('auth-modal').style.display='flex';
 }
@@ -1306,38 +1342,117 @@ function showUpgradePrompt(feature){
         ✓ Priority support · 7-day free trial
       </div>
     </div>
-    ${needLogin?`<button class="btn-run" onclick="doLogin('pro')" style="width:100%;margin-bottom:.5rem">Start 7-day free trial →</button>`:`<button class="btn-run" onclick="doUpgrade()" style="width:100%;margin-bottom:.5rem">Start 7-day free trial →</button>`}
+    ${needLogin?`
+    <div class="fg" style="margin-bottom:.6rem"><input type="email" id="auth-email" placeholder="you@example.com" style="width:100%;padding:9px 11px;border:1px solid var(--border-strong);border-radius:8px"></div>
+    <div class="fg" style="margin-bottom:.75rem"><input type="password" id="auth-pass" placeholder="Create a password (min 6 chars)" style="width:100%;padding:9px 11px;border:1px solid var(--border-strong);border-radius:8px"></div>
+    <button class="btn-run" onclick="doLogin('pro')" style="width:100%;margin-bottom:.5rem">Create account & start trial →</button>`:`<button class="btn-run" onclick="doUpgrade()" style="width:100%;margin-bottom:.5rem">Start 7-day free trial →</button>`}
     <div style="text-align:center;font-size:11px;color:var(--slate)">Clear refund policy · Cancel anytime</div>`;
   document.getElementById('auth-modal').style.display='flex';
 }
 
 function closeAuthModal(){document.getElementById('auth-modal').style.display='none';}
 
-// Simulated auth (client-side). With Supabase connected, replace with real auth.
-function doLogin(targetPlan){
+/* ════════════════════════════════════════
+   AUTHENTICATION
+   Real Supabase auth when connected; browser-only simulation otherwise.
+   Both paths end by calling applyAccount() so the rest of the app is identical.
+════════════════════════════════════════ */
+
+// Create a free account (email + password). targetPlan lets the Pro flow reuse it.
+async function doLogin(targetPlan){
   const emailEl=document.getElementById('auth-email');
+  const passEl=document.getElementById('auth-pass');
   const email=emailEl?emailEl.value.trim():'';
+  const pass=passEl?passEl.value:'';
   if(emailEl&&!email){emailEl.style.borderColor='var(--red)';return;}
-  account.status=targetPlan==='pro'?'pro':'free';
-  account.email=email||account.email||'you@example.com';
-  persistAccount();
+  if(passEl&&(!pass||pass.length<6)){passEl.style.borderColor='var(--red)';toastC('Password must be at least 6 characters.');return;}
+
+  if(backendReady()){
+    // ---- REAL AUTH ----
+    try{
+      // Try sign-in first; if the user doesn't exist, sign them up.
+      let { data, error } = await sb.auth.signInWithPassword({ email, password: pass });
+      if(error){
+        const su = await sb.auth.signUp({ email, password: pass });
+        if(su.error){ toastC('Sign-in failed: '+su.error.message); return; }
+        data = su.data;
+        // Supabase may require email confirmation depending on your project settings.
+        if(!data.session){ toastC('Check your email to confirm your account, then sign in.'); closeAuthModal(); return; }
+      }
+      await afterAuth(data.user, targetPlan);
+    }catch(e){ toastC('Auth error: '+e.message); }
+  } else {
+    // ---- LOCAL SIMULATION (no keys configured) ----
+    account.status = targetPlan==='pro' ? 'pro' : 'free';
+    account.email  = email || account.email || 'you@example.com';
+    persistAccount();
+    finishLogin(targetPlan);
+  }
+}
+
+// Runs after a successful real sign-in/up: load or create the profile row,
+// pull the plan, then sync any local data up to the cloud.
+async function afterAuth(user, targetPlan){
+  account.email = user.email;
+  account.userId = user.id;
+  // Ensure a profile row exists and read the plan.
+  let plan='free';
+  try{
+    const { data: prof } = await sb.from('profiles').select('plan').eq('id', user.id).single();
+    if(prof && prof.plan) plan = prof.plan;
+    else { await sb.from('profiles').upsert({ id:user.id, email:user.email, plan:'free' }); }
+  }catch(e){ /* table may not exist yet; default to free */ }
+  account.status = (targetPlan==='pro') ? 'pro' : plan;
+  await pullProfileFromCloud();   // cross-device: bring saved prefs/wallet down
+  finishLogin(targetPlan);
+}
+
+function finishLogin(targetPlan){
   closeAuthModal();
   updateAccountUI();
-  toastC(targetPlan==='pro'?'Pro trial started — all features unlocked':'Signed in — your data will now be saved');
-  // re-render current view so gated features appear
+  toastC(targetPlan==='pro'?'Pro trial started — all features unlocked':'Signed in — your data now syncs across devices');
   const active=document.querySelector('.nav-btn.active');
   if(active)active.click();
 }
-function doUpgrade(){
-  account.status='pro';persistAccount();closeAuthModal();updateAccountUI();
+
+async function doUpgrade(){
+  if(backendReady() && account.userId){
+    // In production this happens via the Razorpay webhook server-side.
+    // Here we optimistically flip; the webhook is the source of truth.
+    try{ await sb.from('profiles').update({ plan:'pro' }).eq('id', account.userId); }catch(e){}
+  }
+  account.status='pro'; persistAccount(); closeAuthModal(); updateAccountUI();
   toastC('Pro trial started — all features unlocked');
 }
-function doLogout(){
-  account.status='anon';account.email=null;persistAccount();updateAccountUI();
-  toastC('Signed out. Your saved data stays on this device.');
+
+async function doLogout(){
+  if(backendReady()){ try{ await sb.auth.signOut(); }catch(e){} }
+  account.status='anon'; account.email=null; account.userId=null;
+  persistAccount(); updateAccountUI();
+  toastC('Signed out.');
 }
-function persistAccount(){try{localStorage.setItem('cardiq_account',JSON.stringify({status:account.status,email:account.email}));}catch(e){}}
-function loadAccount(){try{const s=localStorage.getItem('cardiq_account');if(s){const a=JSON.parse(s);account.status=a.status||'anon';account.email=a.email||null;}}catch(e){}}
+
+function persistAccount(){try{localStorage.setItem('cardiq_account',JSON.stringify({status:account.status,email:account.email,userId:account.userId||null}));}catch(e){}}
+function loadAccount(){try{const s=localStorage.getItem('cardiq_account');if(s){const a=JSON.parse(s);account.status=a.status||'anon';account.email=a.email||null;account.userId=a.userId||null;}}catch(e){}}
+
+// On page load, if a real Supabase session exists, restore it (this is what makes
+// "stay logged in" and cross-device work).
+async function restoreSession(){
+  if(!backendReady()){ loadAccount(); return; }
+  try{
+    const { data:{ session } } = await sb.auth.getSession();
+    if(session && session.user){ await afterAuthSilent(session.user); }
+    else { account.status='anon'; }
+  }catch(e){ loadAccount(); }
+}
+async function afterAuthSilent(user){
+  account.email=user.email; account.userId=user.id;
+  let plan='free';
+  try{ const { data:prof } = await sb.from('profiles').select('plan').eq('id',user.id).single(); if(prof&&prof.plan) plan=prof.plan; }catch(e){}
+  account.status=plan;
+  await pullProfileFromCloud();
+  updateAccountUI();
+}
 
 // Header account chip
 function updateAccountUI(){
@@ -2271,15 +2386,49 @@ function obNext(){
 }
 
 function saveProfile(){
-  try{localStorage.setItem('cardiq_profile',JSON.stringify({
-    income:prefs.income,cibil:prefs.cibil,ecosystems:prefs.ecosystems,rewardType:prefs.rewardType
-  }));}catch(e){}
+  const profileData={income:prefs.income,cibil:prefs.cibil,ecosystems:prefs.ecosystems,rewardType:prefs.rewardType};
+  try{localStorage.setItem('cardiq_profile',JSON.stringify(profileData));}catch(e){}
+  pushProfileToCloud();  // if signed in, sync up (cross-device)
 }
 function loadProfile(){
   try{
     const s=localStorage.getItem('cardiq_profile');
     if(s){const p=JSON.parse(s);prefs.income=p.income??null;prefs.cibil=p.cibil??null;prefs.ecosystems=p.ecosystems||[];prefs.rewardType=p.rewardType||'any';}
   }catch(e){}
+}
+
+/* ── CROSS-DEVICE SYNC ──
+   When signed in, the user's profile + wallet + tracked data are stored in Supabase
+   (a single JSON blob per user in the profiles table), so a second device gets it all.
+   Local-mode users just keep using localStorage. */
+async function pushProfileToCloud(){
+  if(!backendReady() || !account.userId) return;
+  const blob={
+    prefs:{income:prefs.income,cibil:prefs.cibil,ecosystems:prefs.ecosystems,rewardType:prefs.rewardType,milesValue:prefs.milesValue},
+    myCards:[...myCards],
+    txLog: (typeof txLog!=='undefined')?txLog:[],
+    points: loadPts(),
+    payments: loadPays(),
+    cardEndings: JSON.parse(localStorage.getItem('cardiq_endings')||'{}')
+  };
+  try{ await sb.from('profiles').update({ data: blob, email:account.email }).eq('id', account.userId); }
+  catch(e){ /* 'data' column may not exist yet; safe to ignore until schema is applied */ }
+}
+async function pullProfileFromCloud(){
+  if(!backendReady() || !account.userId) return;
+  try{
+    const { data:row } = await sb.from('profiles').select('data').eq('id', account.userId).single();
+    const blob=row&&row.data;
+    if(!blob) return;
+    if(blob.prefs) Object.assign(prefs, blob.prefs);
+    if(blob.myCards) { myCards=new Set(blob.myCards); saveState&&saveState(); }
+    if(blob.txLog){ txLog=blob.txLog; saveTxState&&saveTxState(); }
+    if(blob.points) localStorage.setItem('cardiq_points', JSON.stringify(blob.points));
+    if(blob.payments) localStorage.setItem('cardiq_payments', JSON.stringify(blob.payments));
+    if(blob.cardEndings) localStorage.setItem('cardiq_endings', JSON.stringify(blob.cardEndings));
+    // refresh views if they're open
+    try{ renderTracker&&renderTracker(); }catch(e){}
+  }catch(e){ /* first login, no data yet */ }
 }
 
 function obSkip(){dismissOnboarding();}
@@ -2603,13 +2752,39 @@ function trackedCardCount(){
 }
 
 // Pro features — gated; when Pro connected to backend these call the Edge Functions.
-function proGmailSync(){
+async function proGmailSync(){
   if(!gate('gmailSync'))return;
-  toastC('Gmail sync starts here — connect your backend gmail-sync function.');
+  if(!backendReady()){ toastC('Connect Supabase keys to enable Gmail sync.'); return; }
+  if(!CARDIQ_CONFIG.googleClientId){ toastC('Add your Google OAuth client id to CARDIQ_CONFIG to enable Gmail sync.'); return; }
+  toastC('Opening Google sign-in for Gmail (read-only, bank emails only)…');
+  // Full flow lives in the backend package (gmail-sync function). Here we call it:
+  try{
+    const { data:{ session } } = await sb.auth.getSession();
+    const res = await fetch(CARDIQ_CONFIG.functionsBase+'/gmail-sync', {
+      method:'POST',
+      headers:{ 'Content-Type':'application/json', 'Authorization':'Bearer '+(session?.access_token||'') },
+      body: JSON.stringify({ sinceDays:30 })
+    });
+    const out = await res.json();
+    if(out.error){ toastC('Gmail sync: '+out.error); return; }
+    toastC(`Gmail sync found ${out.count??0} transactions.`);
+  }catch(e){ toastC('Gmail sync not reachable yet — deploy the backend function first.'); }
 }
-function proReconcile(){
+async function proReconcile(){
   if(!gate('reconciliation'))return;
-  toastC('Reconciliation runs here — connect your backend reconcile function.');
+  if(!backendReady()){ toastC('Connect Supabase keys to enable reconciliation.'); return; }
+  toastC('Checking whether the bank paid what you earned…');
+  try{
+    const { data:{ session } } = await sb.auth.getSession();
+    const res = await fetch(CARDIQ_CONFIG.functionsBase+'/reconcile', {
+      method:'POST',
+      headers:{ 'Content-Type':'application/json', 'Authorization':'Bearer '+(session?.access_token||'') },
+      body: JSON.stringify({ month: trkCurrentMonth?trkCurrentMonth():'' })
+    });
+    const out = await res.json();
+    if(out.error){ toastC('Reconciliation: '+out.error); return; }
+    toastC(out.message||'Reconciliation complete.');
+  }catch(e){ toastC('Reconciliation not reachable yet — deploy the backend function first.'); }
 }
 // Enforce the 5-card free cap. Returns true if the card is new AND we're at the cap on free.
 function atFreeCardCap(cardId){
@@ -3548,8 +3723,10 @@ function printReport(){
 loadState();
 loadTxState();
 loadProfile();
-loadAccount();
+loadAccount();          // instant local state so UI isn't blank
 updateAccountUI();
+// If real backend is configured, restore the actual session (async) and refresh UI.
+restoreSession().then(updateAccountUI);
 buildSpendGrid();
 updateFreshBar();
 // set tracker date default to today
