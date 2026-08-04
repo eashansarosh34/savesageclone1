@@ -186,6 +186,10 @@ input[type=range]{width:100%;accent-color:var(--navy);}
 .det-panel strong{color:var(--navy);}
 .apply-btn{margin-left:8px;padding:.4rem .9rem;border:none;border-radius:8px;background:var(--gold);color:var(--navy);font-size:12px;font-weight:600;cursor:pointer;transition:opacity .15s;}
 .apply-btn:hover{opacity:.88;}
+.pro-teaser{background:linear-gradient(180deg,#0C1B32,#0A1628);border-radius:14px;padding:1.5rem;text-align:center;margin-bottom:1.25rem;position:relative;overflow:hidden;}
+.pro-teaser-badge{display:inline-block;background:var(--gold);color:var(--navy);font-size:10px;font-weight:700;letter-spacing:.06em;padding:2px 10px;border-radius:99px;margin-bottom:.625rem;}
+.pro-teaser-title{font-family:'DM Serif Display',serif;font-size:20px;color:#fff;margin-bottom:.5rem;line-height:1.25;}
+.pro-teaser-sub{font-size:12.5px;color:var(--slate-light);line-height:1.6;max-width:440px;margin:0 auto;}
 
 /* ── Winner card (Mode B) ── */
 .winner{background:var(--navy);border-radius:14px;padding:1.375rem 1.5rem;margin-bottom:1.25rem;color:var(--white);}
@@ -828,13 +832,16 @@ input[type=range]{width:100%;accent-color:var(--navy);}
         <div style="overflow-x:auto">
         <table style="width:100%;border-collapse:collapse;font-size:12px">
           <tr style="background:var(--surface2)"><th style="text-align:left;padding:8px 10px">Feature</th><th style="padding:8px 6px">No login</th><th style="padding:8px 6px">Free account</th><th style="padding:8px 6px;color:var(--gold)">Pro ₹399/yr</th></tr>
-          <tr><td style="padding:7px 10px">Card recommendations & optimizer</td><td style="text-align:center">✅</td><td style="text-align:center">✅</td><td style="text-align:center">✅</td></tr>
+          <tr><td style="padding:7px 10px">Best card for a category</td><td style="text-align:center">✅</td><td style="text-align:center">✅</td><td style="text-align:center">✅</td></tr>
           <tr><td style="padding:7px 10px">Eligibility & "should I get a card"</td><td style="text-align:center">✅</td><td style="text-align:center">✅</td><td style="text-align:center">✅</td></tr>
+          <tr><td style="padding:7px 10px">Wallet optimizer — top result & value</td><td style="text-align:center">✅</td><td style="text-align:center">✅</td><td style="text-align:center">✅</td></tr>
+          <tr><td style="padding:7px 10px">Wallet optimizer — full breakdown</td><td style="text-align:center">—</td><td style="text-align:center">—</td><td style="text-align:center">✅</td></tr>
           <tr><td style="padding:7px 10px">Save wallet & sync across devices</td><td style="text-align:center">—</td><td style="text-align:center">✅</td><td style="text-align:center">✅</td></tr>
-          <tr><td style="padding:7px 10px">Transaction tracking & monthly report</td><td style="text-align:center">—</td><td style="text-align:center">✅</td><td style="text-align:center">✅</td></tr>
-          <tr><td style="padding:7px 10px">SMS-paste logging</td><td style="text-align:center">—</td><td style="text-align:center">✅</td><td style="text-align:center">✅</td></tr>
-          <tr><td style="padding:7px 10px">Points & payment reminders</td><td style="text-align:center">—</td><td style="text-align:center">✅ (5 cards)</td><td style="text-align:center">✅ unlimited</td></tr>
-          <tr><td style="padding:7px 10px">Data export & referrals</td><td style="text-align:center">—</td><td style="text-align:center">✅</td><td style="text-align:center">✅</td></tr>
+          <tr><td style="padding:7px 10px">Transaction tracking (current month)</td><td style="text-align:center">—</td><td style="text-align:center">✅</td><td style="text-align:center">✅</td></tr>
+          <tr><td style="padding:7px 10px">Full transaction history</td><td style="text-align:center">—</td><td style="text-align:center">—</td><td style="text-align:center">✅</td></tr>
+          <tr><td style="padding:7px 10px">Points & payment reminders</td><td style="text-align:center">—</td><td style="text-align:center">✅ (2 cards)</td><td style="text-align:center">✅ unlimited</td></tr>
+          <tr><td style="padding:7px 10px">Full monthly report (missed earnings)</td><td style="text-align:center">—</td><td style="text-align:center">—</td><td style="text-align:center">✅</td></tr>
+          <tr><td style="padding:7px 10px">Data export</td><td style="text-align:center">—</td><td style="text-align:center">—</td><td style="text-align:center">✅</td></tr>
           <tr><td style="padding:7px 10px">Gmail auto-sync</td><td style="text-align:center">—</td><td style="text-align:center">—</td><td style="text-align:center">✅</td></tr>
           <tr><td style="padding:7px 10px">Reconciliation & dispute letters</td><td style="text-align:center">—</td><td style="text-align:center">—</td><td style="text-align:center">✅</td></tr>
           <tr><td style="padding:7px 10px">Automated email alerts</td><td style="text-align:center">—</td><td style="text-align:center">—</td><td style="text-align:center">✅</td></tr>
@@ -1249,7 +1256,7 @@ const account={
   status:'anon',            // 'anon' | 'free' | 'pro'
   email:null,
   userId:null,              // Supabase user id when signed in for real
-  MAX_FREE_TRACKED:5        // free tier: up to 5 tracked cards for reminders
+  MAX_FREE_TRACKED:2        // free tier: up to 2 tracked cards; Pro is unlimited
 };
 
 /* ════════════════════════════════════════
@@ -1332,10 +1339,11 @@ function isPro(){return account.status==='pro';}
 
 // Which features require which layer. Used by gate().
 const FEATURE_TIER={
-  // free-after-login (persistence & tracking)
-  saveWallet:'free', tracking:'free', monthlyReport:'free', smsLog:'free',
-  manualReminders:'free', dataExport:'free', referrals:'free',
-  // pro-only (recurring high-value / cost-to-serve)
+  // free-after-login (light persistence — enough to build the habit)
+  saveWallet:'free', tracking:'free', smsLog:'free',
+  manualReminders:'free', referrals:'free',
+  // pro-only (the value stack — recurring, high-value, or cost-to-serve)
+  monthlyReport:'pro', dataExport:'pro', walletDetail:'pro', fullHistory:'pro',
   gmailSync:'pro', reconciliation:'pro', autoAlerts:'pro',
   unlimitedCards:'pro', prioritySupport:'pro'
 };
@@ -1356,9 +1364,10 @@ function gate(feature){
 
 /* ── Auth modal rendering ── */
 const FEATURE_NAMES={
-  saveWallet:'save your wallet across devices',tracking:'transaction tracking & history',
-  monthlyReport:'monthly reports',smsLog:'SMS-paste logging',manualReminders:'points & payment reminders',
+  saveWallet:'save your wallet across devices',tracking:'transaction tracking',
+  monthlyReport:'the full monthly report',smsLog:'SMS-paste logging',manualReminders:'points & payment reminders',
   dataExport:'data export',referrals:'referrals',gmailSync:'Gmail auto-sync',
+  walletDetail:'the full wallet breakdown',fullHistory:'your full transaction history',
   reconciliation:'reward reconciliation & dispute letters',autoAlerts:'automated email alerts',
   unlimitedCards:'unlimited tracked cards',prioritySupport:'priority support'
 };
@@ -2043,6 +2052,21 @@ function runB(){
   html+=`</tbody><tfoot><tr><td colspan="2">Total · ₹${total.toLocaleString('en-IN')}/month</td><td>${feeNote}</td><td></td><td style="color:var(--gold)">+₹${Math.round(totR).toLocaleString('en-IN')}/mo</td></tr></tfoot></table></div>
     ${best.milestoneTotal>0?`<div style="margin-top:.75rem;padding:8px 12px;background:rgba(29,184,122,.12);border-radius:8px;font-size:12px;color:var(--gold)">🎯 Includes ₹${best.milestoneTotal.toLocaleString('en-IN')}/yr in milestone bonuses from hitting quarterly/annual spend thresholds</div>`:''}
     </div>`;
+
+  // FREE users see the headline wallet + total value above (the teaser), but the
+  // detailed per-category routing, top-3 alternatives, and chart are Pro.
+  if(!isPro()){
+    html+=`<div class="pro-teaser">
+      <div class="pro-teaser-badge">PRO</div>
+      <div class="pro-teaser-title">See exactly how to reach ${best.netAnnual>=0?'+':''}₹${Math.round(best.netAnnual).toLocaleString('en-IN')}/year</div>
+      <div class="pro-teaser-sub">You're seeing your optimal wallet and its total value. Unlock the full breakdown: which card to use for every category, all ${all.length} combinations ranked, and the category chart.</div>
+      <button class="btn-run" style="max-width:280px;margin:.875rem auto 0" onclick="showUpgradePrompt('walletDetail')">Unlock full breakdown →</button>
+    </div>`;
+    html+=`<div class="meth"><strong>Method:</strong> Exhaustive combinatorial search over ${all.length} portfolios, routing each category to the best card after caps, exclusions, fees (waiver + 18% GST) and milestone bonuses. No sponsored rankings.</div>`;
+    html+=saveNudge();
+    document.getElementById('res-b').innerHTML=html;
+    return;
+  }
 
   if(uplift>100&&best.combo.length>1)html+=`<div class="insight"><strong>Why multiple cards win:</strong> This ${best.combo.length}-card wallet earns <strong>₹${Math.round(uplift).toLocaleString('en-IN')} more per year</strong> than the best single card (${singleBest.combo[0].name} at ₹${Math.round(singleBest.netAnnual).toLocaleString('en-IN')}/yr). Rewards are optimised per category, fees waived where spend clears thresholds, and milestone bonuses counted.</div>`;
 
@@ -2731,10 +2755,18 @@ function renderTrkHistory(){
   if(!txLog.length){histPanel.style.display='none';return;}
   histPanel.style.display='';
 
-  // build month filter
-  const months=[...new Set(txLog.map(t=>t.date.slice(0,7)))].sort().reverse();
+  // build month filter — FREE users can only view the current month; full history is Pro.
+  let months=[...new Set(txLog.map(t=>t.date.slice(0,7)))].sort().reverse();
+  const curMonth=today().slice(0,7);
+  let historyLocked=false;
+  if(!isPro()){
+    const older=months.filter(m=>m!==curMonth);
+    historyLocked=older.length>0;
+    months=months.filter(m=>m===curMonth);
+    if(!months.length)months=[curMonth];
+  }
   const filterEl=document.getElementById('trk-filter-month');
-  const curFilter=filterEl.value||months[0];
+  const curFilter=(!isPro())?months[0]:(filterEl.value||months[0]);
   filterEl.innerHTML=months.map(m=>`<option value="${m}" ${m===curFilter?'selected':''}>${trkMonthLabel(m)}</option>`).join('');
 
   const filtered=txLog.filter(t=>t.date.slice(0,7)===curFilter);
@@ -2760,7 +2792,7 @@ function renderTrkHistory(){
         <td><button class="tx-del" onclick="deleteTx(${tx.id})" title="Delete">✕</button></td>
       </tr>`;
     }).join('')}</tbody>
-  </table>`;
+  </table>${historyLocked?`<div style="margin-top:.75rem;padding:.75rem 1rem;background:var(--surface2);border:1px dashed var(--border-strong);border-radius:10px;font-size:12px;color:var(--slate);text-align:center">📆 You're viewing this month only. <strong style="color:var(--navy);cursor:pointer" onclick="showUpgradePrompt('fullHistory')">Upgrade to Pro</strong> to see your full transaction history.</div>`:''}`;
 }
 
 function deleteTx(id){
