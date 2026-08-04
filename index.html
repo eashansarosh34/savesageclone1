@@ -879,11 +879,140 @@ footer a{color:var(--slate);text-decoration:none;margin-right:20px}
 
 <!-- APPLICATION CONTAINER (Hidden initially) -->
 <div id="app-container" style="display:none;">
+
     <!-- Small back button added to app -->
     <div style="background:var(--navy); padding: 10px 24px; color: white;">
         <a href="javascript:void(0)" onclick="closeApp()" style="color:white; text-decoration:none; font-weight:bold;">← Back to Home</a>
     </div>
-<div id="toast-c" class="toast"></div>
+
+
+
+<header class="hdr">
+  <div class="hdr-inner">
+    <div class="logo">
+      <span class="logo-mark">CardIQ</span>
+      <span class="logo-tag">India · UPI-first · No email access needed · No sponsored rankings</span>
+    </div>
+    <div class="acct-wrap" id="account-chip">
+      <button class="acct-btn" onclick="showLoginPrompt('saveWallet')">Sign in — free</button>
+    </div>
+  </div>
+</header>
+
+<main class="shell">
+
+  <!-- Nav -->
+  <nav class="nav" role="tablist" aria-label="Tool sections">
+    <button class="nav-btn active" role="tab" aria-selected="true"  onclick="showTab('a')" id="tab-a">
+      <span class="nb-label">Single category</span>
+      <span class="nb-sub">Best card for one spend type</span>
+    </button>
+    <button class="nav-btn" role="tab" aria-selected="false" onclick="showTab('b')" id="tab-b">
+      <span class="nb-label">Wallet optimizer</span>
+      <span class="nb-sub">Best 1–3 card combo</span>
+    </button>
+    <button class="nav-btn" role="tab" aria-selected="false" onclick="showTab('c')" id="tab-c">
+      <span class="nb-label">Database editor</span>
+      <span class="nb-sub">Manage card data</span>
+    </button>
+    <button class="nav-btn" role="tab" aria-selected="false" onclick="showTab('d')" id="tab-d">
+      <span class="nb-label">My cards</span>
+      <span class="nb-sub">Save your wallet</span>
+    </button>
+    <button class="nav-btn" role="tab" aria-selected="false" onclick="showTab('e')" id="tab-e">
+      <span class="nb-label">How it works</span>
+      <span class="nb-sub">Methodology &amp; trust</span>
+    </button>
+    <button class="nav-btn" role="tab" aria-selected="false" onclick="showTab('f')" id="tab-f">
+      <span class="nb-label">Tracker</span>
+      <span class="nb-sub">Log spends · watch caps</span>
+    </button>
+  </nav>
+
+  <!-- Global prefs (shown on A + B tabs) -->
+  <div class="prefs" id="prefs-bar" aria-label="Global preferences">
+    <div class="pref-col">
+      <span class="pref-lbl">Reward preference</span>
+      <div class="ptog">
+        <button class="ptog-btn active" onclick="setPref('rewardType','any',this)">Any</button>
+        <button class="ptog-btn" onclick="setPref('rewardType','cashback',this)">Cashback only</button>
+        <button class="ptog-btn" onclick="setPref('rewardType','miles',this)">Travel points</button>
+      </div>
+    </div>
+    <div class="pref-col">
+      <span class="pref-lbl">Reward points redemption method</span>
+      <div class="ptog">
+        <button class="ptog-btn active" onclick="setPref('milesValue','avg',this)" title="Typical partner voucher / SmartBuy redemption">Standard</button>
+        <button class="ptog-btn" onclick="setPref('milesValue','high',this)" title="Best-case: flights via transfer partners or SmartBuy at peak value">Best (flights)</button>
+        <button class="ptog-btn" onclick="setPref('milesValue','low',this)" title="Worst-case: statement credit / cash redemption">Low (cash)</button>
+      </div>
+    </div>
+    <div class="pref-col">
+      <span class="pref-lbl">Filters</span>
+      <label class="pchk"><input type="checkbox" id="g-sharia"> RuPay/UPI only</label>
+      <label class="pchk"><input type="checkbox" id="g-nofee"> No annual fee only</label>
+    </div>
+  </div>
+
+  <!-- Freshness bar -->
+  <div class="fresh-bar" id="fresh-bar" role="status">
+    <span><span class="fdot"></span>Card data last verified: <strong id="fresh-date">August 2026</strong>. Always confirm rates with the issuing bank before applying.</span>
+    <span id="fresh-count" style="white-space:nowrap"></span>
+  </div>
+
+  <!-- ══════════ TAB A ══════════ -->
+  <section id="tab-panel-a" role="tabpanel">
+    <div class="panel">
+      <div class="panel-title">Spending scenario</div>
+      <div class="g2">
+        <div class="fg"><label for="cat-sel">Category</label>
+          <select id="cat-sel">
+            <option value="online">Online Shopping (Amazon/Flipkart)</option>
+            <option value="dining">Dining & Food (Swiggy/Zomato)</option>
+            <option value="groceries">Groceries (BigBasket/Blinkit)</option>
+            <option value="fuel">Fuel & Petrol</option>
+            <option value="utilities">Bills & Utilities</option>
+            <option value="rent">Rent</option>
+            <option value="travel">Travel & Flights</option>
+            <option value="upi">UPI Spends (RuPay)</option>
+          </select>
+        </div>
+        <div class="fg"><label for="spend-a">Monthly spend (₹)</label>
+          <input type="number" id="spend-a" value="15000" min="500" max="500000" step="500">
+        </div>
+      </div>
+      <div class="g3" style="margin-top:.875rem">
+        <div class="slrow"><label>Reward rate priority <span id="sl-r-out">High</span></label><input type="range" id="sl-r" min="1" max="5" value="5" step="1" oninput="updSl('sl-r','sl-r-out')"></div>
+        <div class="slrow"><label>Low annual fee <span id="sl-f-out">Med</span></label><input type="range" id="sl-f" min="1" max="5" value="3" step="1" oninput="updSl('sl-f','sl-f-out')"></div>
+        <div class="slrow"><label>High / no cap <span id="sl-c-out">Med</span></label><input type="range" id="sl-c" min="1" max="5" value="3" step="1" oninput="updSl('sl-c','sl-c-out')"></div>
+      </div>
+      <button class="btn-run" onclick="runA()">Find best card →</button>
+    </div>
+    <div id="res-a"></div>
+  </section>
+
+  <!-- ══════════ TAB B ══════════ -->
+  <section id="tab-panel-b" style="display:none" role="tabpanel">
+    <div class="panel">
+      <div class="panel-title">Monthly spending profile</div>
+      <div class="g2" id="spend-grid-b"></div>
+      <div class="wsrow">
+        <span class="wslbl">Cards in wallet:</span>
+        <div class="wsbtns">
+          <button class="wsbtn" onclick="setWS(1)">1 card</button>
+          <button class="wsbtn active" onclick="setWS(2)">2 cards</button>
+          <button class="wsbtn" onclick="setWS(3)">3 cards</button>
+        </div>
+        <span id="total-disp" style="font-size:12px;color:var(--slate);margin-left:auto;"></span>
+      </div>
+      <button class="btn-run" onclick="runB()">Optimize my wallet →</button>
+    </div>
+    <div id="res-b"></div>
+  </section>
+
+  <!-- ══════════ TAB C ══════════ -->
+  <section id="tab-panel-c" style="display:none" role="tabpanel">
+    <div id="toast-c" class="toast"></div>
     <div class="ed-toolbar">
       <div class="ed-left">
         <span class="ed-title">Card database</span>
@@ -1434,6 +1563,22 @@ footer a{color:var(--slate);text-decoration:none;margin-right:20px}
 
 </main>
 
+<footer class="site-footer">
+  <div class="foot-inner">
+    <div class="foot-brand">
+      <span class="foot-mark">CardIQ</span>
+      <span class="foot-line">India's honest credit-card optimizer. No sponsored rankings, no bank login, no forced email access.</span>
+    </div>
+    <div class="foot-meta">
+      <span>Built for UPI-first India</span>
+      <span class="foot-dot">·</span>
+      <span>Methodology shown for every number</span>
+      <span class="foot-dot">·</span>
+      <span>© 2026 CardIQ</span>
+    </div>
+  </div>
+</footer>
+
 <script>
 /* ════════════════════════════════════════
    SUPABASE CONNECTION
@@ -1587,7 +1732,9 @@ function affiliateApply(cardId){
   // record intent locally (for conversion analytics when backend is connected)
   try{const log=JSON.parse(localStorage.getItem('cardiq_apply_intent')||'[]');log.push({cardId,at:new Date().toISOString()});localStorage.setItem('cardiq_apply_intent',JSON.stringify(log));}catch(e){}
   toastC(`Opening ${card.name} application… (CardIQ earns a referral fee only if you're approved — it never changes our ranking.)`);
-  // window.open(TRACKED_AFFILIATE_URL[cardId], '_blank');  // wire real URL in production
+  // To send the user to the bank's application page in PRODUCTION, navigate in the
+  // SAME tab (honors the "no new tab" rule). Uncomment and wire your tracked URL:
+  // location.href = TRACKED_AFFILIATE_URL[cardId];   // same tab, not window.open
 }
 
 // Gift-card redemption partners (referral cut, no inventory held).
@@ -1648,7 +1795,7 @@ function showLoginPrompt(feature){
     <div class="fg" style="margin-bottom:.75rem"><label>Password</label><input type="password" id="auth-pass" placeholder="At least 6 characters" style="width:100%;padding:9px 11px;border:1px solid var(--border-strong);border-radius:8px"></div>
     <button class="btn-run" onclick="doLogin('free')" style="width:100%;margin-bottom:.5rem">Create free account →</button>
     <div style="text-align:center;font-size:12px;color:var(--slate)">Same button signs you in if you already have an account.</div>
-    <div style="margin-top:1rem;padding-top:1rem;border-top:1px solid var(--border);text-align:center;font-size:11px;color:var(--slate)">We only ever store what you choose to save. <a href="#" onclick="showTab('e');closeAuthModal();return false" style="color:var(--blue)">Privacy details</a></div>`;
+    <div style="margin-top:1rem;padding-top:1rem;border-top:1px solid var(--border);text-align:center;font-size:11px;color:var(--slate)">We only ever store what you choose to save. <span onclick="showTab('e');closeAuthModal();" style="color:var(--blue);cursor:pointer;text-decoration:underline">Privacy details</span></div>`;
   document.getElementById('auth-modal').style.display='flex';
 }
 
@@ -3189,7 +3336,8 @@ function doRedeem(partner,cardId){
   try{const log=JSON.parse(localStorage.getItem('cardiq_redeem_intent')||'[]');log.push({cardId,partner,at:new Date().toISOString()});localStorage.setItem('cardiq_redeem_intent',JSON.stringify(log));}catch(e){}
   closeAuthModal();
   toastC(`Opening ${partner} redemption for ${card?card.name:'your card'}… redeem before your points lapse.`);
-  // window.open(REDEMPTION_URL[partner], '_blank');  // wire real partner URL in production
+  // In PRODUCTION, navigate in the SAME tab (honors the "no new tab" rule):
+  // location.href = REDEMPTION_URL[partner];   // same tab, not window.open
 }
 function removePay(cardId,due){savePays(loadPays().filter(p=>!(p.cardId===cardId&&p.due===due)));renderPtsAndPays();}
 
@@ -4064,6 +4212,33 @@ const trkDateEl=document.getElementById('trk-date');
 if(trkDateEl)trkDateEl.value=today();
 maybeShowOnboarding();
 if(localStorage.getItem('cardiq_onboarded'))runA();
+
+/* ════════════════════════════════════════
+   SAME-PAGE GUARD
+   Hard rule: nothing on this page ever opens a new tab or navigates away.
+   This is a safety net that catches ANY anchor click. It:
+     • blocks in-page "#" jumps (which scroll to top),
+     • strips target="_blank" so nothing opens a new tab,
+     • lets genuine file downloads (a[download]) still work,
+     • lets buttons and their onclick handlers run normally.
+════════════════════════════════════════ */
+document.addEventListener('click', function(e){
+  const a = e.target.closest && e.target.closest('a');
+  if(!a) return;                                   // not a link — ignore
+  if(a.hasAttribute('download')) return;           // allow CSV/JSON downloads
+  const href = a.getAttribute('href') || '';
+  // Block empty, hash-only, or javascript: links from doing anything navigational.
+  if(href==='' || href==='#' || href.startsWith('#') || href.startsWith('javascript:')){
+    e.preventDefault();                            // no page jump; onclick still ran
+    return;
+  }
+  // Any real URL: prevent it from navigating away or opening a new tab.
+  // (There are none in this app by design, but this enforces your rule absolutely.)
+  e.preventDefault();
+}, true);
+
+// Belt-and-suspenders: neutralise any target="_blank" that ever slips in.
+document.querySelectorAll('a[target="_blank"]').forEach(function(a){ a.removeAttribute('target'); });
 </script>
 
 </div>
