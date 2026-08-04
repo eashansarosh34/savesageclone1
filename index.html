@@ -95,6 +95,14 @@ p.sec-sub{text-align:center;color:var(--slate);font-size:17px;max-width:600px;ma
 .price-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:24px;max-width:720px;margin:0 auto}
 .price-card{border:1px solid var(--border);border-radius:18px;padding:32px;background:#fff}
 .price-card.pro{border:2px solid var(--gold);position:relative}
+.price-card.plus{background:var(--navy);color:#fff;border:2px solid var(--navy);position:relative}
+.price-card.plus h3{color:#fff}
+.price-card.plus .price-amount{color:#fff}
+.price-card.plus li{color:rgba(255,255,255,.85);border-bottom:1px solid rgba(255,255,255,.1)}
+.price-card.plus li::before{content:"✓ ";color:var(--gold);font-weight:700}
+.plus-tag{background:var(--gold)!important;color:var(--navy)!important}
+.btn-plus{background:var(--gold);color:var(--navy);padding:12px 28px;border-radius:11px;text-decoration:none;font-weight:700;font-size:16px;transition:transform .15s;margin-top:8px}
+.btn-plus:hover{transform:translateY(-2px)}
 .price-tag{position:absolute;top:-13px;left:50%;transform:translateX(-50%);background:var(--gold);color:var(--navy);font-size:12px;font-weight:700;padding:4px 16px;border-radius:99px}
 .price-card h3{font-size:20px;margin-bottom:4px}
 .price-amount{font-size:40px;font-family:'DM Serif Display',serif;margin:12px 0}
@@ -246,50 +254,55 @@ footer a{color:var(--slate);text-decoration:none;margin-right:20px}
 <section id="pricing" style="background:var(--surface)">
 <div class="wrap">
 <div class="eyebrow">Pricing</div>
-<h2 class="sec">Free does more than their paid</h2>
-<p class="sec-sub">Finding your best card is free — no login. An account (also free) saves everything. Pro adds automation.</p>
-<div class="price-grid" style="grid-template-columns:repeat(3,1fr);max-width:960px">
+<h2 class="sec">Start free. Upgrade when it pays for itself.</h2>
+<p class="sec-sub">The ranker is free — enough to show you exactly what you're missing. Pro is where the value lands; Pro+ automates everything.</p>
+<div class="price-grid" style="grid-template-columns:repeat(3,1fr);max-width:1000px">
 <div class="price-card">
-<h3>No login</h3>
+<h3>Free</h3>
 <div class="price-amount">₹0</div>
+<div style="font-size:12px;color:var(--slate);margin-bottom:8px">The hook</div>
 <ul>
-<li>Full card recommendations</li>
-<li>Wallet optimizer</li>
+<li>Best card for any category</li>
+<li>"Should I get this card?"</li>
 <li>Eligibility filter</li>
-<li>"Should I get a card" verdict</li>
-<li class="no">Nothing saved between visits</li>
+<li class="no">Wallet optimizer</li>
+<li class="no">Tracking & reports</li>
+<li class="no">Reminders</li>
 </ul>
 <a class="btn-secondary" href="cardiq-india (2).html" style="display:block;text-align:center;color:var(--navy);border-color:var(--border)">Try it now →</a>
 </div>
-<div class="price-card">
-<h3>Free account</h3>
-<div class="price-amount">₹0<small>/forever</small></div>
-<ul>
-<li>Everything on the left, saved</li>
-<li>Save wallet & sync across devices</li>
-<li>This month's transaction tracking</li>
-<li>SMS-paste logging</li>
-<li>Reminders for up to 2 cards</li>
-<li>Referrals</li>
-</ul>
-<a class="btn-secondary" href="cardiq-india (2).html" style="display:block;text-align:center;color:var(--navy);border-color:var(--border)">Create free account →</a>
-</div>
 <div class="price-card pro">
-<div class="price-tag">BEST VALUE</div>
+<div class="price-tag">MOST POPULAR</div>
 <h3>Pro</h3>
-<div class="price-amount">₹399<small>/year</small></div>
+<div class="price-amount">₹499<small>/year</small></div>
+<div style="font-size:12px;color:var(--slate);margin-bottom:8px">₹42/mo · the bread & butter</div>
 <ul>
-<li>Full wallet breakdown & alternatives</li>
-<li>Full monthly report (missed earnings)</li>
-<li>Full transaction history + export</li>
-<li>Unlimited reminders + auto-alerts</li>
-<li>Gmail sync · reconciliation · disputes</li>
-<li>Priority support · 7-day trial</li>
+<li>Full wallet optimizer</li>
+<li>Transaction tracker + reports</li>
+<li>SMS-paste logging</li>
+<li>Reminders for up to 5 cards</li>
+<li>Data export</li>
+<li>7-day free trial</li>
 </ul>
-<a class="btn-primary" href="cardiq-india (2).html?upgrade=1" style="display:block;text-align:center">Start 7-day trial →</a>
+<a class="btn-primary" href="cardiq-india (2).html?upgrade=1" style="display:block;text-align:center">Start Pro trial →</a>
+</div>
+<div class="price-card plus">
+<div class="price-tag plus-tag">MAX SAVINGS</div>
+<h3>Pro+</h3>
+<div class="price-amount">₹999<small>/year</small></div>
+<div style="font-size:12px;color:rgba(255,255,255,.6);margin-bottom:8px">₹83/mo · zero manual work</div>
+<ul>
+<li>Everything in Pro</li>
+<li>Gmail auto-sync</li>
+<li>Reconciliation + dispute letters</li>
+<li>Automated email alerts</li>
+<li>Family sharing (3 accounts)</li>
+<li>Priority support</li>
+</ul>
+<a class="btn-plus" href="/app?upgrade=plus" style="display:block;text-align:center">Start Pro+ trial →</a>
 </div>
 </div>
-<p style="text-align:center;margin-top:20px;font-size:13px;color:var(--slate)">A fraction of SaveSage's premium tiers — with a more generous free tier and no forced email access.</p>
+<p style="text-align:center;margin-top:20px;font-size:13px;color:var(--slate)">The average user saves ₹3,000–8,000/year — a 6–16× return on Pro. Both paid tiers include a 7-day trial and a clear refund policy.</p>
 </div>
 </section>
 
