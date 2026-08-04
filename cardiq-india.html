@@ -786,7 +786,7 @@ input[type=range]{width:100%;accent-color:var(--navy);}
         <p style="font-size:13px;line-height:1.75;color:var(--slate);margin-bottom:1rem">Finding the right card is free for everyone — no login needed. Signing in (also free) saves your data and unlocks tracking. Pro adds automation and the reconciliation engine.</p>
         <div style="overflow-x:auto">
         <table style="width:100%;border-collapse:collapse;font-size:12px">
-          <tr style="background:var(--surface2)"><th style="text-align:left;padding:8px 10px">Feature</th><th style="padding:8px 6px">No login</th><th style="padding:8px 6px">Free account</th><th style="padding:8px 6px;color:var(--gold)">Pro ₹399/yr</th></tr>
+          <tr style="background:var(--surface2)"><th style="text-align:left;padding:8px 10px">Feature</th><th style="padding:8px 6px">No login</th><th style="padding:8px 6px">Free account</th><th style="padding:8px 6px;color:var(--gold)">Pro ₹299/yr</th></tr>
           <tr><td style="padding:7px 10px">Card recommendations & optimizer</td><td style="text-align:center">✅</td><td style="text-align:center">✅</td><td style="text-align:center">✅</td></tr>
           <tr><td style="padding:7px 10px">Eligibility & "should I get a card"</td><td style="text-align:center">✅</td><td style="text-align:center">✅</td><td style="text-align:center">✅</td></tr>
           <tr><td style="padding:7px 10px">Save wallet & sync across devices</td><td style="text-align:center">—</td><td style="text-align:center">✅</td><td style="text-align:center">✅</td></tr>
@@ -801,7 +801,7 @@ input[type=range]{width:100%;accent-color:var(--navy);}
         </table>
         </div>
         <div style="margin-top:1rem;padding:.75rem 1rem;background:var(--green-bg);border-radius:8px;font-size:12px;color:var(--green-text)">
-          Everything you use on the free tier stays free forever. Pro is a 7-day free trial, ₹399/year after, with a clear refund policy — a fraction of SaveSage's ₹14,000+ premium tiers.
+          Everything you use on the free tier stays free forever. Pro is a 7-day free trial, ₹299/year after, with a clear refund policy — a fraction of SaveSage's ₹14,000+ premium tiers.
         </div>
       </div>
 
@@ -829,7 +829,7 @@ input[type=range]{width:100%;accent-color:var(--navy);}
         <p style="font-size:13px;line-height:1.75;color:var(--slate);margin-bottom:1rem">We're a pure-software product with no bank sponsorships and no merchant deals to negotiate. We make money three ways, and none of them bends the advice you get:</p>
         <div style="display:flex;flex-direction:column;gap:.75rem">
           <div style="border-left:3px solid var(--gold);padding:.5rem 0 .5rem .875rem">
-            <div style="font-size:13px;font-weight:600;color:var(--navy)">1. Pro subscription — ₹399/year</div>
+            <div style="font-size:13px;font-weight:600;color:var(--navy)">1. Pro subscription — ₹299/year</div>
             <div style="font-size:12px;color:var(--slate);line-height:1.55">Automation and the reconciliation engine. A fraction of what others charge. Everything essential stays free.</div>
           </div>
           <div style="border-left:3px solid var(--gold);padding:.5rem 0 .5rem .875rem">
@@ -1183,7 +1183,7 @@ const spendB={...CAT_DEFAULTS};
    - 'anon' : no login. Full recommendation engine, session-only (nothing saved).
    - 'free' : logged in. Everything anon has + persistence, tracking, reports,
               manual reminders (≤5 cards), export, referrals.
-   - 'pro'  : paid ₹399/yr. + Gmail sync, reconciliation, auto-alerts,
+   - 'pro'  : paid ₹299/yr. + Gmail sync, reconciliation, auto-alerts,
               unlimited cards, priority support.
    This is a client-side simulation of the account system; when the Supabase
    backend is connected, session.user + subscriptions table drive `account`.
@@ -1192,7 +1192,7 @@ const account={
   status:'anon',            // 'anon' | 'free' | 'pro'
   email:null,
   userId:null,              // Supabase user id when signed in for real
-  MAX_FREE_TRACKED:5        // free tier: up to 5 tracked cards for reminders
+  MAX_FREE_TRACKED:2        // free tier: up to 5 tracked cards for reminders
 };
 
 /* ════════════════════════════════════════
@@ -1231,7 +1231,7 @@ const FAILURE_LESSONS=[
 /* ════════════════════════════════════════
    REVENUE MODEL  (pure software, ~90% margin, no inventory)
    Three streams, none of which require negotiating with banks/merchants:
-     1. SUBSCRIPTION — Pro at ₹399/yr (undercuts SaveSage; volume play, not price)
+     1. SUBSCRIPTION — Pro at ₹299/yr (undercuts SaveSage; volume play, not price)
      2. AFFILIATE    — commission when a user we ALREADY recommend a card applies.
                        CRITICAL RULE: affiliate NEVER changes ranking. Links appear
                        only on cards the engine independently ranked. This is the moat.
@@ -1332,13 +1332,14 @@ function showUpgradePrompt(feature){
       <div style="font-size:13px;color:var(--slate)">This is a Pro feature — the automation and analysis that save you the most money each month.</div>
     </div>
     <div style="background:var(--surface2);border-radius:12px;padding:1rem 1.25rem;margin-bottom:1.25rem">
-      <div style="display:flex;align-items:baseline;gap:6px;margin-bottom:.75rem"><span style="font-family:'DM Serif Display',serif;font-size:32px;color:var(--navy)">₹399</span><span style="font-size:13px;color:var(--slate)">/year</span><span style="margin-left:auto;font-size:11px;color:var(--green-text);background:var(--green-bg);padding:2px 8px;border-radius:99px">Undercuts SaveSage's ₹399</span></div>
+      <div style="display:flex;align-items:baseline;gap:6px;margin-bottom:.75rem"><span style="font-family:'DM Serif Display',serif;font-size:32px;color:var(--navy)">₹299</span><span style="font-size:13px;color:var(--slate)">/year</span><span style="margin-left:auto;font-size:11px;color:var(--green-text);background:var(--green-bg);padding:2px 8px;border-radius:99px">LAUNCH OFFER</span></div>
       <div style="font-size:12px;color:var(--slate);line-height:1.9">
         ✓ Gmail auto-sync — no manual entry<br>
         ✓ Reconciliation — did the bank actually pay you?<br>
         ✓ Auto email alerts for expiry & payments<br>
         ✓ Unlimited tracked cards<br>
         ✓ Dispute letter generator<br>
+        ✓ 100% Value-Back Guarantee: Save at least ₹500 or get a full refund<br>
         ✓ Priority support · 7-day free trial
       </div>
     </div>
