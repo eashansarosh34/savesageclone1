@@ -65,6 +65,25 @@ p.sec-sub{text-align:center;color:var(--slate);font-size:17px;max-width:600px;ma
 .step h3{font-size:17px;margin-bottom:8px}
 .step p{color:var(--slate);font-size:14px}
 
+/* Roleplays */
+.rp-head{text-align:center;font-size:13px;font-weight:600;color:var(--gold);letter-spacing:.08em;text-transform:uppercase;margin:56px 0 20px}
+.rp-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:24px;max-width:920px;margin:0 auto}
+.rp-card{background:#fff;border:1px solid var(--border);border-radius:18px;padding:26px;display:flex;flex-direction:column}
+.rp-top{display:flex;align-items:center;gap:12px;margin-bottom:16px}
+.rp-avatar{width:44px;height:44px;border-radius:50%;background:var(--navy);color:var(--gold);display:flex;align-items:center;justify-content:center;font-weight:700;font-size:15px;flex-shrink:0}
+.rp-name{font-size:16px;font-weight:700;color:var(--navy)}
+.rp-meta{font-size:12px;color:var(--slate)}
+.rp-story{font-size:14px;line-height:1.65;color:#2a3744;margin-bottom:18px;flex:1}
+.rp-story b{color:var(--navy)}
+.rp-numbers{display:flex;align-items:center;justify-content:space-between;gap:8px;background:var(--surface2);border-radius:12px;padding:14px 16px;margin-bottom:14px}
+.rp-num{display:flex;flex-direction:column;gap:2px}
+.rp-num span{font-size:11px;color:var(--slate);text-transform:uppercase;letter-spacing:.04em}
+.rp-num b{font-size:19px;color:var(--slate)}
+.rp-num b.rp-win{color:var(--green)}
+.rp-arrow{font-size:20px;color:var(--gold);font-weight:700}
+.rp-result{font-size:13px;line-height:1.6;color:#2a3744}
+.rp-result b{color:var(--navy)}
+
 /* Comparison table */
 .vs-table{background:var(--surface);border-radius:16px;overflow:hidden;border:1px solid var(--border);margin-top:20px}
 .vs-table table{width:100%;border-collapse:collapse}
@@ -129,7 +148,7 @@ footer .wrap{display:flex;justify-content:space-between;flex-wrap:wrap;gap:16px}
 footer a{color:var(--slate);text-decoration:none;margin-right:20px}
 
 @media(max-width:820px){
-  .problem-grid,.steps,.feat-grid,.price-grid{grid-template-columns:1fr}
+  .problem-grid,.steps,.feat-grid,.price-grid,.rp-grid{grid-template-columns:1fr}
   .hero h1{font-size:36px}
   .hero p.sub{font-size:17px}
   h2.sec{font-size:28px}
@@ -142,12 +161,12 @@ footer a{color:var(--slate);text-decoration:none;margin-right:20px}
 
 <header>
 <div class="wrap">
-<a href="cardiq-landing.html" class="logo" style="text-decoration:none;">CardIQ</a>
+<span class="logo">CardIQ</span>
 <nav class="nav-links">
 <a href="/best/dining/">Best cards</a>
 <a href="/#how">How it works</a>
 <a href="/#pricing">Pricing</a>
-<a class="btn-nav" href="cardiq-india.html">Open the tool</a>
+<a class="btn-nav" href="/app">Open the tool</a>
 </nav>
 </div>
 </header>
@@ -158,8 +177,8 @@ footer a{color:var(--slate);text-decoration:none;margin-right:20px}
 <h1>Indians lose <span class="gold">thousands of crores</span><br>in expired card points every year</h1>
 <p class="sub">CardIQ tells you which card to use, warns you before your points lapse, and checks that the bank actually paid you what you earned. Free to start — no bank login, no forced email access.</p>
 <div class="hero-cta">
-<a class="btn-primary" href="cardiq-india.html">Find my best card →</a>
-<a class="btn-secondary" href="cardiq-india.html?demo=1">Try without signing up</a>
+<a class="btn-primary" href="/app">Find my best card →</a>
+<a class="btn-secondary" href="/app?demo=1">Try without signing up</a>
 </div>
 <div class="hero-trust">
 <span>No email or bank login to start</span>
@@ -199,6 +218,39 @@ footer a{color:var(--slate);text-decoration:none;margin-right:20px}
 <div class="step"><div class="step-num">1</div><h3>Enter your spending</h3><p>Rough monthly amounts across dining, online, groceries, fuel, rent, UPI, and more. Takes 30 seconds.</p></div>
 <div class="step"><div class="step-num">2</div><h3>We do the real math</h3><p>Every card, every cap, every exclusion, every fee waiver and milestone — computed for your exact numbers.</p></div>
 <div class="step"><div class="step-num">3</div><h3>Get your answer</h3><p>The single best card, or the best 2–3 card wallet, plus whether it's even worth applying for a new one.</p></div>
+</div>
+
+<div class="rp-head">See it in real life</div>
+<div class="rp-grid">
+
+<div class="rp-card">
+<div class="rp-top">
+<div class="rp-avatar">PR</div>
+<div><div class="rp-name">Priya, 24</div><div class="rp-meta">Content designer · Indore · 2 cards</div></div>
+</div>
+<p class="rp-story">Priya orders on Swiggy 3–4 times a week and always paid with her HDFC card because "it had points." CardIQ showed her the HDFC earns <b>1%</b> on dining, but her Axis Ace — sitting unused in a drawer — earns <b>5%</b>.</p>
+<div class="rp-numbers">
+<div class="rp-num"><span class="rp-before">Was earning</span><b>₹85/mo</b></div>
+<div class="rp-arrow">→</div>
+<div class="rp-num"><span class="rp-after">Now earns</span><b class="rp-win">₹420/mo</b></div>
+</div>
+<div class="rp-result">She switched which card she taps for food. <b>₹4,000+ a year</b> she was leaving on the table — for a ₹0 change.</div>
+</div>
+
+<div class="rp-card">
+<div class="rp-top">
+<div class="rp-avatar">RK</div>
+<div><div class="rp-name">Rahul, 29</div><div class="rp-meta">Software engineer · Hyderabad · 4 cards</div></div>
+</div>
+<p class="rp-story">Rahul juggles four cards and lost track of his points. CardIQ Pro flagged <b>₹3,200 in HDFC points expiring in 26 days</b>, and its reconciliation caught the bank crediting <b>₹250 less</b> than he'd earned last month.</p>
+<div class="rp-numbers">
+<div class="rp-num"><span class="rp-before">Would've lost</span><b>₹3,450</b></div>
+<div class="rp-arrow">→</div>
+<div class="rp-num"><span class="rp-after">Recovered</span><b class="rp-win">₹3,450</b></div>
+</div>
+<div class="rp-result">He redeemed before expiry and sent the auto-drafted dispute. <b>7× his ₹499 Pro fee</b> — recovered in one month.</div>
+</div>
+
 </div>
 </div>
 </section>
@@ -269,7 +321,7 @@ footer a{color:var(--slate);text-decoration:none;margin-right:20px}
 <li class="no">Tracking & reports</li>
 <li class="no">Reminders</li>
 </ul>
-<a class="btn-secondary" href="cardiq-india.html" style="display:block;text-align:center;color:var(--navy);border-color:var(--border)">Try it now →</a>
+<a class="btn-secondary" href="/app" style="display:block;text-align:center;color:var(--navy);border-color:var(--border)">Try it now →</a>
 </div>
 <div class="price-card pro">
 <div class="price-tag">MOST POPULAR</div>
@@ -284,7 +336,7 @@ footer a{color:var(--slate);text-decoration:none;margin-right:20px}
 <li>Data export</li>
 <li>7-day free trial</li>
 </ul>
-<a class="btn-primary" href="cardiq-india.html?upgrade=1" style="display:block;text-align:center">Start Pro trial →</a>
+<a class="btn-primary" href="/app?upgrade=1" style="display:block;text-align:center">Start Pro trial →</a>
 </div>
 <div class="price-card plus">
 <div class="price-tag plus-tag">MAX SAVINGS</div>
@@ -322,7 +374,7 @@ footer a{color:var(--slate);text-decoration:none;margin-right:20px}
 <div class="final">
 <h2>Find your best card now</h2>
 <p>Free, no login, 30 seconds.</p>
-<a class="btn-primary" href="cardiq-india.html">Run the optimizer →</a>
+<a class="btn-primary" href="/app">Run the optimizer →</a>
 </div>
 </div>
 
@@ -332,7 +384,7 @@ footer a{color:var(--slate);text-decoration:none;margin-right:20px}
 <a href="/best/dining/">Best cards</a>
 <a href="/#pricing">Pricing</a>
 <a href="/privacy">Privacy</a>
-<a href="cardiq-india.html">Open the tool</a>
+<a href="/app">Open the tool</a>
 </div>
 <div>© 2026 CardIQ · Independent · No bank sponsorships</div>
 </div>
