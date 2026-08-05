@@ -1562,7 +1562,6 @@ async function doAuthAction(mode, targetPlan){
   if(btn) { btn.disabled=false; btn.innerText = mode==='login' ? 'Log in with Password →' : (targetPlan ? 'Create account & start trial →' : 'Sign up →'); }
 }
 
-/* ════════════════════════════════════════
 // Runs after a successful real sign-in/up: load or create the profile row,
 // pull the plan, then sync any local data up to the cloud.
 async function afterAuth(user, targetPlan){
