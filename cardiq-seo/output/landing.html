@@ -27,7 +27,61 @@ header .wrap{display:flex;align-items:center;justify-content:space-between}
 .btn-nav{background:var(--gold);color:var(--navy)!important;padding:9px 18px;border-radius:8px;font-weight:600}
 
 /* Hero */
-.hero{background:linear-gradient(160deg,var(--navy) 0%,var(--navy2) 100%);color:#fff;padding:72px 0 80px;text-align:center}
+.hero{position:relative;overflow:hidden;background:linear-gradient(160deg,var(--navy) 0%,var(--navy2) 100%);color:#fff;padding:72px 0 80px;text-align:center}
+.hero .wrap{position:relative;z-index:3}
+
+/* ── Luxury ambient layers ── */
+/* Slow-drifting city skyline silhouette behind the hero */
+.lux-skyline{position:absolute;left:0;right:0;bottom:0;height:230px;z-index:1;opacity:.16;pointer-events:none;
+  background-repeat:repeat-x;background-position:bottom;background-size:1200px 230px;
+  animation:luxDrift 60s linear infinite}
+@keyframes luxDrift{from{background-position-x:0}to{background-position-x:-1200px}}
+/* Second, slower parallax skyline for depth */
+.lux-skyline.back{height:280px;opacity:.09;background-size:1600px 280px;animation-duration:110s}
+
+/* Soft gold glow that breathes */
+.lux-glow{position:absolute;z-index:0;width:900px;height:900px;left:50%;top:-380px;transform:translateX(-50%);
+  background:radial-gradient(circle,rgba(201,168,76,.16),transparent 62%);pointer-events:none;
+  animation:luxBreathe 9s ease-in-out infinite}
+@keyframes luxBreathe{0%,100%{opacity:.7;transform:translateX(-50%) scale(1)}50%{opacity:1;transform:translateX(-50%) scale(1.08)}}
+
+/* Floating gold particles — like light catching on something expensive */
+.lux-particles{position:absolute;inset:0;z-index:2;pointer-events:none;overflow:hidden}
+.lux-particles i{position:absolute;bottom:-12px;width:5px;height:5px;border-radius:50%;
+  background:radial-gradient(circle,rgba(201,168,76,.9),rgba(201,168,76,0));
+  animation:luxRise linear infinite;opacity:0}
+@keyframes luxRise{
+  0%{transform:translateY(0) scale(.6);opacity:0}
+  12%{opacity:.9}
+  85%{opacity:.7}
+  100%{transform:translateY(-560px) scale(1.1);opacity:0}}
+
+/* Gold shimmer sweep across the headline */
+.hero h1 .gold{color:var(--gold);background:linear-gradient(100deg,var(--gold) 30%,#fff5d6 50%,var(--gold) 70%);
+  -webkit-background-clip:text;background-clip:text;-webkit-text-fill-color:transparent;
+  background-size:220% 100%;animation:luxShimmer 5.5s ease-in-out infinite}
+@keyframes luxShimmer{0%,100%{background-position:130% 0}50%{background-position:-30% 0}}
+
+/* ── Scroll-reveal for sections ── */
+.reveal{opacity:0;transform:translateY(28px);transition:opacity .8s cubic-bezier(.2,.7,.2,1),transform .8s cubic-bezier(.2,.7,.2,1)}
+.reveal.in{opacity:1;transform:none}
+
+/* ── Ambient section motifs (very subtle, behind content) ── */
+section{position:relative;overflow:hidden}
+section .wrap,section .wrap-narrow{position:relative;z-index:2}
+.lux-motif{position:absolute;z-index:0;pointer-events:none;opacity:.05;color:var(--navy)}
+.lux-motif.travel{top:40px;right:-40px;width:340px;animation:luxFloat 14s ease-in-out infinite}
+.lux-motif.tower{bottom:-30px;left:-30px;width:260px;animation:luxFloat 18s ease-in-out infinite reverse}
+.lux-motif.rings{top:50%;left:50%;width:520px;transform:translate(-50%,-50%);opacity:.04;animation:luxSpin 90s linear infinite}
+@keyframes luxFloat{0%,100%{transform:translateY(0)}50%{transform:translateY(-16px)}}
+@keyframes luxSpin{from{transform:translate(-50%,-50%) rotate(0)}to{transform:translate(-50%,-50%) rotate(360deg)}}
+
+/* Respect users who prefer no motion */
+@media(prefers-reduced-motion:reduce){
+  .lux-skyline,.lux-glow,.lux-particles i,.hero h1 .gold,.lux-motif{animation:none}
+  .reveal{opacity:1;transform:none;transition:none}
+}
+
 .hero-badge{display:inline-block;background:rgba(201,168,76,.15);color:var(--gold);font-size:13px;font-weight:600;padding:6px 16px;border-radius:99px;margin-bottom:24px;border:1px solid rgba(201,168,76,.3)}
 .hero h1{font-family:'DM Serif Display',serif;font-size:52px;line-height:1.1;margin-bottom:20px;letter-spacing:-.5px}
 .hero h1 .gold{color:var(--gold)}
@@ -172,6 +226,10 @@ footer a{color:var(--slate);text-decoration:none;margin-right:20px}
 </header>
 
 <div class="hero">
+<div class="lux-glow"></div>
+<div class="lux-particles" id="luxParticles"></div>
+<div class="lux-skyline back" style="background-image:url('data:image/svg+xml;utf8,<svg xmlns=%22http://www.w3.org/2000/svg%22 width=%221600%22 height=%22280%22 viewBox=%220 0 1600 280%22><g fill=%22%23C9A84C%22>%3Crect x=%2240%22 y=%22120%22 width=%2270%22 height=%22160%22/%3E%3Crect x=%22140%22 y=%2280%22 width=%2250%22 height=%22200%22/%3E%3Crect x=%22220%22 y=%22150%22 width=%2290%22 height=%22130%22/%3E%3Crect x=%22340%22 y=%2260%22 width=%2245%22 height=%22220%22/%3E%3Crect x=%22410%22 y=%22110%22 width=%2280%22 height=%22170%22/%3E%3Crect x=%22520%22 y=%2290%22 width=%2255%22 height=%22190%22/%3E%3Crect x=%22610%22 y=%22140%22 width=%22100%22 height=%22140%22/%3E%3Crect x=%22740%22 y=%2250%22 width=%2240%22 height=%22230%22/%3E%3Crect x=%22800%22 y=%22120%22 width=%2275%22 height=%22160%22/%3E%3Crect x=%22900%22 y=%2295%22 width=%2260%22 height=%22185%22/%3E%3Crect x=%22990%22 y=%22150%22 width=%2295%22 height=%22130%22/%3E%3Crect x=%221110%22 y=%2270%22 width=%2248%22 height=%22210%22/%3E%3Crect x=%221185%22 y=%22115%22 width=%2285%22 height=%22165%22/%3E%3Crect x=%221300%22 y=%2290%22 width=%2258%22 height=%22190%22/%3E%3Crect x=%221390%22 y=%22140%22 width=%22100%22 height=%22140%22/%3E%3Crect x=%221520%22 y=%2280%22 width=%2250%22 height=%22200%22/%3E%3C/g%3E%3C/svg%3E')"></div>
+<div class="lux-skyline" style="background-image:url('data:image/svg+xml;utf8,<svg xmlns=%22http://www.w3.org/2000/svg%22 width=%221200%22 height=%22230%22 viewBox=%220 0 1200 230%22><g fill=%22%23C9A84C%22>%3Crect x=%2220%22 y=%22110%22 width=%2260%22 height=%22120%22/%3E%3Crect x=%22100%22 y=%2260%22 width=%2245%22 height=%22170%22/%3E%3Crect x=%22170%22 y=%22130%22 width=%2280%22 height=%22100%22/%3E%3Crect x=%22280%22 y=%2240%22 width=%2238%22 height=%22190%22/%3E%3Crect x=%22340%22 y=%2295%22 width=%2270%22 height=%22135%22/%3E%3Crect x=%22440%22 y=%2270%22 width=%2250%22 height=%22160%22/%3E%3Crect x=%22520%22 y=%22120%22 width=%2295%22 height=%22110%22/%3E%3Crect x=%22640%22 y=%2235%22 width=%2235%22 height=%22195%22/%3E%3Crect x=%22695%22 y=%22100%22 width=%2265%22 height=%22130%22/%3E%3Crect x=%22785%22 y=%2275%22 width=%2255%22 height=%22155%22/%3E%3Crect x=%22870%22 y=%22130%22 width=%2285%22 height=%22100%22/%3E%3Crect x=%22980%22 y=%2255%22 width=%2242%22 height=%22175%22/%3E%3Crect x=%221045%22 y=%22105%22 width=%2275%22 height=%22125%22/%3E%3Crect x=%221140%22 y=%2280%22 width=%2245%22 height=%22150%22/%3E%3C/g%3E%3C/svg%3E')"></div>
 <div class="wrap">
 <div class="hero-badge">Built for India · UPI-first · No email access needed</div>
 <h1>Indians lose <span class="gold">thousands of crores</span><br>in expired card points every year</h1>
@@ -211,6 +269,7 @@ footer a{color:var(--slate);text-decoration:none;margin-right:20px}
 </section>
 
 <section id="how" style="background:var(--surface)">
+<svg class="lux-motif travel" viewBox="0 0 400 200" fill="none" stroke="currentColor" stroke-width="2"><path d="M10 180 Q 150 20 390 90" stroke-dasharray="6 8"/><circle cx="10" cy="180" r="4" fill="currentColor" stroke="none"/><g transform="translate(360 78) rotate(25)"><path d="M0 0 L34 8 L0 16 L8 8 Z" fill="currentColor" stroke="none"/></g></svg>
 <div class="wrap">
 <div class="eyebrow">How it works</div>
 <h2 class="sec">Your best card in three steps</h2>
@@ -304,6 +363,7 @@ footer a{color:var(--slate);text-decoration:none;margin-right:20px}
 </section>
 
 <section id="pricing" style="background:var(--surface)">
+<svg class="lux-motif tower" viewBox="0 0 200 240" fill="currentColor"><rect x="20" y="120" width="26" height="120"/><rect x="54" y="80" width="20" height="160"/><rect x="82" y="40" width="30" height="200"/><rect x="120" y="95" width="22" height="145"/><rect x="150" y="130" width="28" height="110"/></svg>
 <div class="wrap">
 <div class="eyebrow">Pricing</div>
 <h2 class="sec">Start free. Upgrade when it pays for itself.</h2>
@@ -396,6 +456,33 @@ footer a{color:var(--slate);text-decoration:none;margin-right:20px}
 {"@type":"Question","name":"Is CardIQ free?","acceptedAnswer":{"@type":"Answer","text":"Yes. The ranker, wallet optimizer, SMS tracking and monthly report are free forever. Pro is ₹399/year."}},
 {"@type":"Question","name":"How is CardIQ different from a comparison website?","acceptedAnswer":{"@type":"Answer","text":"CardIQ ranks by real rupee value after caps, exclusions, fees and milestones, and takes no bank sponsorships."}}
 ]}
+</script>
+<script>
+// Floating gold particles in the hero (light catching on something premium)
+(function(){
+  var host=document.getElementById('luxParticles');
+  if(!host)return;
+  var n=18;
+  for(var i=0;i<n;i++){
+    var s=document.createElement('i');
+    var size=2+Math.random()*4;
+    s.style.left=(Math.random()*100)+'%';
+    s.style.width=s.style.height=size+'px';
+    s.style.animationDuration=(7+Math.random()*9)+'s';
+    s.style.animationDelay=(-Math.random()*12)+'s';
+    host.appendChild(s);
+  }
+})();
+// Gentle scroll-reveal: sections fade/slide in as they enter the viewport
+(function(){
+  var els=document.querySelectorAll('section, .proof, .rp-card');
+  els.forEach(function(el){el.classList.add('reveal');});
+  if(!('IntersectionObserver' in window)){els.forEach(function(el){el.classList.add('in');});return;}
+  var io=new IntersectionObserver(function(entries){
+    entries.forEach(function(e){ if(e.isIntersecting){ e.target.classList.add('in'); io.unobserve(e.target); } });
+  },{threshold:.12});
+  els.forEach(function(el){io.observe(el);});
+})();
 </script>
 </body>
 </html>
