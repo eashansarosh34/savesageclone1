@@ -903,7 +903,7 @@ input[type=range]{width:100%;accent-color:var(--navy);}
       <!-- Data & Privacy -->
       <div class="panel">
         <div class="panel-title">Your data & privacy</div>
-        <p style="font-size:13px;line-height:1.75;color:var(--slate);margin-bottom:1rem">CardIQ's core tools run entirely in your browser. Nothing you enter here is sent anywhere unless you explicitly connect an account. You own your data and can take it with you or erase it at any time.</p>
+        <p style="font-size:13px;line-height:1.75;color:var(--slate);margin-bottom:1rem">CardIQ is designed with privacy-first principles. If you use CardIQ without an account, your data never leaves your browser. When you create an account, your data is securely encrypted and synced to the cloud so you can access it across devices. We never sell your data, we do not scrape your bank login credentials, and you have the absolute right to export or permanently delete your data at any time.</p>
         <div style="display:grid;grid-template-columns:1fr 1fr;gap:.75rem;margin-bottom:1rem">
           <div style="padding:1rem;background:var(--surface2);border-radius:10px">
             <div style="font-size:13px;font-weight:600;color:var(--navy);margin-bottom:.5rem">📤 Export your data</div>
@@ -919,7 +919,7 @@ input[type=range]{width:100%;accent-color:var(--navy);}
         </div>
         <div style="padding:1rem;background:var(--red-bg);border:1px solid rgba(217,59,59,.2);border-radius:10px">
           <div style="font-size:13px;font-weight:600;color:var(--red-text);margin-bottom:.5rem">🗑 Delete all my data</div>
-          <div style="font-size:12px;color:var(--red-text);margin-bottom:.75rem">Permanently erase everything CardIQ has stored in this browser. Cannot be undone.</div>
+          <div style="font-size:12px;color:var(--red-text);margin-bottom:.75rem">Permanently erase everything CardIQ has stored in this browser and in the cloud. Cannot be undone.</div>
           <button class="btn" onclick="deleteAllData()" style="background:var(--red);color:#fff;border-color:var(--red)">Delete everything</button>
         </div>
       </div>
@@ -3387,9 +3387,20 @@ function copyReferral(){
    PRIVACY — delete all data (DPDP-friendly)
 ════════════════════════════════════════ */
 function deleteAllData(){
-  if(!confirm('This permanently deletes ALL your CardIQ data from this browser — transactions, wallet, profile, and settings. This cannot be undone.\n\nContinue?'))return;
+  if(!confirm('This permanently deletes ALL your CardIQ data from this browser (and the cloud, if logged in) — transactions, wallet, profile, and settings. This cannot be undone.\\n\\nContinue?'))return;
   if(!confirm('Are you absolutely sure? Everything will be erased.'))return;
-  ['cardiq_tx','cardiq_db','cardiq_profile','cardiq_endings','cardiq_onboarded','cardiq_rate_reports','cardiq_ref_code','cardiq_audit'].forEach(k=>localStorage.removeItem(k));
+  
+  if(backendReady() && account.userId){
+    try{
+      // Erase personal cloud data directly
+      sb.from('transactions').delete().eq('user_id', account.userId).then();
+      sb.from('my_cards').delete().eq('user_id', account.userId).then();
+      sb.from('profiles').update({ income:null, cibil:null, ecosystems:null }).eq('id', account.userId).then();
+      sb.auth.signOut().then();
+    }catch(e){ console.error('Cloud delete failed', e); }
+  }
+
+  ['cardiq_tx','cardiq_db','cardiq_profile','cardiq_endings','cardiq_onboarded','cardiq_rate_reports','cardiq_ref_code','cardiq_audit','cardiq_account'].forEach(k=>localStorage.removeItem(k));
   txLog=[];myCards=new Set();prefs.income=null;prefs.cibil=null;prefs.ecosystems=[];
   toastC('All data deleted. Reloading…');
   setTimeout(()=>location.reload(),1200);
