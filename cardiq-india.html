@@ -3884,11 +3884,18 @@ setTimeout(() => {
   const urlParams = new URLSearchParams(window.location.search);
   const upgradeTier = urlParams.get('upgrade');
   if (upgradeTier === 'pro' || upgradeTier === 'pro_plus') {
+    // 1. Force kill onboarding so it doesn't block the screen
+    const ob = document.getElementById('onboarding');
+    if(ob) ob.style.display='none';
+    localStorage.setItem('cardiq_onboarded','1');
+    
+    // 2. Show the auth/upgrade modal
     showUpgradePrompt('landingPage', upgradeTier);
-    // Optionally clean up URL so refreshing doesn't re-trigger it
-    window.history.replaceState({}, document.title, window.location.pathname);
+    
+    // 3. Clean up URL cleanly
+    try { window.history.replaceState({}, document.title, window.location.pathname); } catch(e){}
   }
-}, 300); // Slight delay ensures UI is loaded before modal
+}, 400); // Slight delay ensures UI is loaded before modal
 
 
 /* ════════════════════════════════════════
