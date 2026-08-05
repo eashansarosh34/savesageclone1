@@ -1380,123 +1380,67 @@ const FEATURE_NAMES={
   unlimitedCards:'unlimited tracked cards',prioritySupport:'priority support'
 };
 
-function showLoginPrompt(feature){
-  const feat=FEATURE_NAMES[feature]||'this feature';
-  document.getElementById('auth-modal-body').innerHTML=`
-    <div style="text-align:center;margin-bottom:1.25rem">
-      <div style="font-family:'DM Serif Display',serif;font-size:24px;color:var(--navy);margin-bottom:.375rem">Create a free account</div>
-      <div style="font-size:13px;color:var(--slate)">To ${feat}, sign in — it's free. Your recommendations stay free forever; logging in just lets us <strong>remember your data</strong>.</div>
-    </div>
-    <div style="background:var(--green-bg);border:1px solid rgba(29,184,122,.2);border-radius:10px;padding:.75rem 1rem;margin-bottom:1.25rem;font-size:12px;color:var(--green-text)">
-      ✓ Free forever · ✓ No card required · ✓ Everything you use now stays free
-    </div>
-    <div class="fg" style="margin-bottom:.75rem"><label>Email</label><input type="email" id="auth-email" placeholder="you@example.com" style="width:100%;padding:9px 11px;border:1px solid var(--border-strong);border-radius:8px"></div>
-    <div class="fg" style="margin-bottom:.75rem"><label>Password</label><input type="password" id="auth-pass" placeholder="At least 6 characters" style="width:100%;padding:9px 11px;border:1px solid var(--border-strong);border-radius:8px"></div>
-    <button class="btn-run" onclick="doLogin('free')" style="width:100%;margin-bottom:.5rem">Create free account →</button>
-    <div style="text-align:center;font-size:12px;color:var(--slate)">Same button signs you in if you already have an account.</div>
-    <div style="margin-top:1rem;padding-top:1rem;border-top:1px solid var(--border);text-align:center;font-size:11px;color:var(--slate)">We only ever store what you choose to save. <span onclick="showTab('e');closeAuthModal();" style="color:var(--blue);cursor:pointer;text-decoration:underline">Privacy details</span></div>`;
-  document.getElementById('auth-modal').style.display='flex';
-}
-
-// tier = 'pro' | 'pro_plus' — the tier this feature requires
-function showUpgradePrompt(feature, tier){
-  tier = tier || FEATURE_TIER[feature] || 'pro';
-  const feat=FEATURE_NAMES[feature]||'this feature';
-  const needSignup=(account.status==='anon');
-
-  // Feature lists per tier
-  const proFeatures=[
-    'Full wallet optimizer & breakdown',
-    'Transaction tracker + monthly reports',
-    'SMS-paste logging',
-    'Reminders for up to 5 cards',
-    'Data export',
-    '7-day free trial'
-  ];
-  const proPlusFeatures=[
-    'Everything in Pro, plus:',
-    'Gmail auto-sync — zero manual entry',
-    'Reconciliation + dispute letters',
-    'Automated email alerts',
-    'Family sharing (3 accounts)',
-    'Unlimited cards · priority support'
-  ];
-
-  const showTier = (tier==='pro_plus') ? 'pro_plus' : 'pro';
-  const P = PRICING[showTier];
-  const badge = showTier==='pro_plus' ? 'PRO+' : 'PRO';
-  const feats = showTier==='pro_plus' ? proPlusFeatures : proFeatures;
-  const actionPlan = showTier; // what doLogin/doUpgrade will set
-
-  // Cross-sell line: from a Pro gate → point up to Pro+; from a Pro+ gate → offer Pro fallback.
-  const crossSell = showTier==='pro'
-    ? `<div style="text-align:center;margin-top:.75rem;font-size:12px;color:var(--slate)">Need Gmail sync & reconciliation? <span onclick="showUpgradePrompt('gmailSync','pro_plus')" style="color:var(--blue);cursor:pointer;text-decoration:underline">See Pro+ →</span></div>`
-    : `<div style="text-align:center;margin-top:.75rem;font-size:12px;color:var(--slate)">Just need tracking & reports? <span onclick="showUpgradePrompt('tracking','pro')" style="color:var(--blue);cursor:pointer;text-decoration:underline">← See Pro (₹499)</span></div>`;
-
-  const badgeBg = showTier==='pro_plus' ? 'var(--navy)' : 'var(--gold)';
-  const badgeColor = showTier==='pro_plus' ? 'var(--gold)' : 'var(--navy)';
-
-  document.getElementById('auth-modal-body').innerHTML=`
-    <div style="text-align:center;margin-bottom:1.1rem">
-      <div style="display:inline-block;background:${badgeBg};color:${badgeColor};font-size:11px;font-weight:700;padding:3px 12px;border-radius:99px;margin-bottom:.75rem">${badge}</div>
-      <div style="font-family:'DM Serif Display',serif;font-size:23px;color:var(--navy);margin-bottom:.375rem">Unlock ${feat}</div>
-      <div style="font-size:13px;color:var(--slate)">${showTier==='pro_plus'?'This is a Pro+ feature — full automation so you never lift a finger.':'This is a Pro feature — the tracking, reports and optimizer that turn insight into saved money.'}</div>
-    </div>
-    <div style="background:var(--surface2);border-radius:12px;padding:1rem 1.25rem;margin-bottom:1rem">
-      <div style="display:flex;align-items:baseline;gap:6px;margin-bottom:.75rem">
-        <span style="font-family:'DM Serif Display',serif;font-size:32px;color:var(--navy)">₹${P.price}</span>
-        <span style="font-size:13px;color:var(--slate)">/year</span>
-        <span style="margin-left:auto;font-size:11px;color:var(--green-text);background:var(--green-bg);padding:2px 8px;border-radius:99px">${P.mo} · cancel anytime</span>
-      </div>
-      <div style="font-size:12px;color:var(--slate);line-height:1.9">
-        ${feats.map(f=>`✓ ${f}`).join('<br>')}
-      </div>
-    </div>
-    ${needSignup?`
-    <div id="auth-error" style="color:var(--red);font-size:12px;text-align:center;margin-bottom:10px;display:none;"></div>
-    <div class="fg" style="margin-bottom:.6rem"><input type="email" id="auth-email" placeholder="you@example.com" style="width:100%;padding:9px 11px;border:1px solid var(--border-strong);border-radius:8px"></div>
-    <div class="fg" style="margin-bottom:.75rem; position:relative;">
-      <input type="password" id="auth-pass" placeholder="Create a password (min 6 chars)" style="width:100%;padding:9px 11px;border:1px solid var(--border-strong);border-radius:8px;padding-right:36px;">
-      <div onclick="togglePassword()" style="position:absolute;right:10px;top:10px;cursor:pointer;opacity:0.6;" title="Show password">👁️</div>
-    </div>
-    <button class="btn-run" onclick="doAuthAction('signup', '${actionPlan}')" style="width:100%;margin-bottom:.5rem">Create account & start trial →</button>
-    <div style="text-align:center;font-size:12px;color:var(--slate);margin-bottom:.5rem">Already have an account? <span onclick="showLoginPrompt('login', '${actionPlan}')" style="color:var(--blue);cursor:pointer;">Log in</span></div>`
-    :`<button class="btn-run" onclick="doUpgrade('${actionPlan}')" style="width:100%;margin-bottom:.5rem">Start 7-day free trial →</button>`}
-    <div style="text-align:center;font-size:11px;color:var(--slate)">Clear refund policy · Cancel anytime</div>
-    ${crossSell}`;
-  document.getElementById('auth-modal').style.display='flex';
-}
-
-function closeAuthModal(){document.getElementById('auth-modal').style.display='none';}
+let currentAuthEmail = '';
+let currentAuthTargetPlan = '';
+let currentAuthType = ''; // 'signup' or 'magiclink' (for login)
 
 function showLoginPrompt(mode = 'login', targetPlan = ''){
   if(account.status!=='anon') return; // already logged in
   const isLogin = mode === 'login';
+  const isOtp = mode === 'otp';
+  currentAuthTargetPlan = targetPlan;
   
-  document.getElementById('auth-modal-body').innerHTML=`
-    <div style="text-align:center;margin-bottom:1.1rem">
-      <div style="font-family:'DM Serif Display',serif;font-size:24px;color:var(--navy);margin-bottom:.375rem">${isLogin ? 'Log in to CardIQ' : 'Create an account'}</div>
-      <div style="font-size:14px;color:var(--slate)">${isLogin ? 'Welcome back! Please enter your details.' : 'Start optimizing your cards today.'}</div>
-    </div>
-    <div id="auth-error" style="color:var(--red);font-size:12px;text-align:center;margin-bottom:10px;display:none;"></div>
-    
-    <div class="fg" style="margin-bottom:.6rem">
-      <input type="email" id="auth-email" placeholder="you@example.com" style="width:100%;padding:9px 11px;border:1px solid var(--border-strong);border-radius:8px">
-    </div>
-    <div class="fg" style="margin-bottom:.75rem; position:relative;">
-      <input type="password" id="auth-pass" placeholder="${isLogin ? 'Password' : 'Create a password (min 6 chars)'}" style="width:100%;padding:9px 11px;border:1px solid var(--border-strong);border-radius:8px;padding-right:36px;">
-      <div onclick="togglePassword()" style="position:absolute;right:10px;top:10px;cursor:pointer;opacity:0.6;" title="Show password">👁️</div>
-    </div>
-    
-    ${isLogin ? `<div style="text-align:right;margin-bottom:1rem;font-size:12px;"><span onclick="doResetPassword()" style="color:var(--blue);cursor:pointer;font-weight:500;">Forgot password?</span></div>` : ''}
-    
-    <button class="btn-run" onclick="doAuthAction('${mode}', '${targetPlan}')" style="width:100%;margin-bottom:1rem">${isLogin ? 'Log in →' : (targetPlan ? 'Create account & start trial →' : 'Sign up →')}</button>
-    
-    <div style="text-align:center;font-size:12px;color:var(--slate)">
-      ${isLogin ? 'Don\'t have an account? <span onclick="showLoginPrompt(\'signup\', \''+targetPlan+'\')" style="color:var(--blue);cursor:pointer;font-weight:600;">Sign up</span>' 
-                : 'Already have an account? <span onclick="showLoginPrompt(\'login\', \''+targetPlan+'\')" style="color:var(--blue);cursor:pointer;font-weight:600;">Log in</span>'}
-    </div>
-  `;
+  let content = '';
+  
+  if (isOtp) {
+    content = `
+      <div style="text-align:center;margin-bottom:1.1rem">
+        <div style="font-family:'DM Serif Display',serif;font-size:24px;color:var(--navy);margin-bottom:.375rem">Check your email</div>
+        <div style="font-size:14px;color:var(--slate)">We sent a 6-digit code to <strong>${currentAuthEmail}</strong>.</div>
+      </div>
+      <div id="auth-error" style="color:var(--red);font-size:12px;text-align:center;margin-bottom:10px;display:none;"></div>
+      
+      <div class="fg" style="margin-bottom:.75rem">
+        <input type="text" id="auth-otp" placeholder="Enter 6-digit code" style="width:100%;padding:12px;border:1px solid var(--border-strong);border-radius:8px;font-size:18px;letter-spacing:4px;text-align:center;" maxlength="6">
+      </div>
+      
+      <button class="btn-run" onclick="doVerifyOtp()" style="width:100%;margin-bottom:1rem">Verify & Continue →</button>
+      
+      <div style="text-align:center;font-size:12px;color:var(--slate)">
+        Didn't receive it? <span onclick="showLoginPrompt('login', '${targetPlan}')" style="color:var(--blue);cursor:pointer;font-weight:600;">Go back</span>
+      </div>
+    `;
+  } else {
+    content = `
+      <div style="text-align:center;margin-bottom:1.1rem">
+        <div style="font-family:'DM Serif Display',serif;font-size:24px;color:var(--navy);margin-bottom:.375rem">${isLogin ? 'Log in to CardIQ' : 'Create an account'}</div>
+        <div style="font-size:14px;color:var(--slate)">${isLogin ? 'Welcome back! Please enter your details.' : 'Start optimizing your cards today.'}</div>
+      </div>
+      <div id="auth-error" style="color:var(--red);font-size:12px;text-align:center;margin-bottom:10px;display:none;"></div>
+      
+      <div class="fg" style="margin-bottom:.6rem">
+        <input type="email" id="auth-email" placeholder="you@example.com" value="${currentAuthEmail}" style="width:100%;padding:9px 11px;border:1px solid var(--border-strong);border-radius:8px">
+      </div>
+      <div class="fg" style="margin-bottom:.75rem; position:relative;">
+        <input type="password" id="auth-pass" placeholder="${isLogin ? 'Password' : 'Create a password (min 6 chars)'}" style="width:100%;padding:9px 11px;border:1px solid var(--border-strong);border-radius:8px;padding-right:36px;">
+        <div onclick="togglePassword()" style="position:absolute;right:10px;top:10px;cursor:pointer;opacity:0.6;" title="Show password">👁️</div>
+      </div>
+      
+      ${isLogin ? `<div style="text-align:right;margin-bottom:1rem;font-size:12px;"><span onclick="doResetPassword()" style="color:var(--blue);cursor:pointer;font-weight:500;">Forgot password?</span></div>` : ''}
+      
+      <button class="btn-run" onclick="doAuthAction('${mode}', '${targetPlan}')" style="width:100%;margin-bottom:.5rem">${isLogin ? 'Log in with Password →' : (targetPlan ? 'Create account & start trial →' : 'Sign up →')}</button>
+      
+      ${isLogin ? `<div style="text-align:center;font-size:12px;color:var(--slate);margin-bottom:1rem;position:relative;z-index:1"><span style="background:var(--surface);padding:0 8px;color:var(--slate-light)">OR</span><hr style="position:absolute;top:50%;left:0;right:0;margin:0;border:none;border-top:1px solid var(--border);z-index:-1"></div>
+      <button class="btn-outline" onclick="doSendOtp()" style="width:100%;margin-bottom:1.5rem;padding:9px;border:1px solid var(--border-strong);border-radius:8px;background:transparent;cursor:pointer;font-weight:600;color:var(--navy)">Log in with Email OTP</button>` : ''}
+      
+      <div style="text-align:center;font-size:12px;color:var(--slate)">
+        ${isLogin ? 'Don\'t have an account? <span onclick="showLoginPrompt(\'signup\', \''+targetPlan+'\')" style="color:var(--blue);cursor:pointer;font-weight:600;">Sign up</span>' 
+                  : 'Already have an account? <span onclick="showLoginPrompt(\'login\', \''+targetPlan+'\')" style="color:var(--blue);cursor:pointer;font-weight:600;">Log in</span>'}
+      </div>
+    `;
+  }
+  
+  document.getElementById('auth-modal-body').innerHTML = content;
   document.getElementById('auth-modal').style.display='flex';
 }
 
@@ -1514,25 +1458,52 @@ function showAuthError(msg){
 async function doResetPassword(){
   const emailEl=document.getElementById('auth-email');
   const email=emailEl?emailEl.value.trim():'';
-  if(!email){
-    showAuthError('Please enter your email address first.');
-    return;
-  }
+  if(!email){ showAuthError('Please enter your email address first.'); return; }
   if(!backendReady()){ showAuthError('Supabase keys not configured.'); return; }
   
-  const { error } = await sb.auth.resetPasswordForEmail(email, {
-    redirectTo: window.location.origin + window.location.pathname,
-  });
+  const { error } = await sb.auth.resetPasswordForEmail(email, { redirectTo: window.location.origin + window.location.pathname });
   if(error) showAuthError(error.message);
   else showAuthError('<span style="color:var(--green-text)">Password reset email sent! Please check your inbox.</span>');
 }
 
+async function doSendOtp(){
+  const emailEl=document.getElementById('auth-email');
+  const email=emailEl?emailEl.value.trim():'';
+  if(!email){ showAuthError('Please enter your email to receive an OTP.'); return; }
+  if(!backendReady()){ showAuthError('Supabase keys not configured.'); return; }
+  
+  currentAuthEmail = email;
+  currentAuthType = 'magiclink'; // OTP login
+  
+  const btn = document.querySelector('#auth-modal-body .btn-outline');
+  if(btn) { btn.disabled=true; btn.innerText = "Sending..."; }
+  
+  const { error } = await sb.auth.signInWithOtp({ email });
+  if (error) {
+     showAuthError(error.message);
+     if(btn) { btn.disabled=false; btn.innerText = "Log in with Email OTP"; }
+  } else {
+     showLoginPrompt('otp', currentAuthTargetPlan);
+  }
+}
 
-/* ════════════════════════════════════════
-   AUTHENTICATION
-   Real Supabase auth when connected; browser-only simulation otherwise.
-   Both paths end by calling applyAccount() so the rest of the app is identical.
-════════════════════════════════════════ */
+async function doVerifyOtp(){
+  const otpEl=document.getElementById('auth-otp');
+  const token=otpEl?otpEl.value.trim():'';
+  if(!token || token.length < 6){ showAuthError('Please enter the 6-digit code.'); return; }
+  if(!backendReady()){ showAuthError('Supabase keys not configured.'); return; }
+  
+  const btn = document.querySelector('#auth-modal-body .btn-run');
+  if(btn) { btn.disabled=true; btn.innerText = "Verifying..."; }
+  
+  const { data, error } = await sb.auth.verifyOtp({ email: currentAuthEmail, token, type: currentAuthType });
+  if (error) {
+     showAuthError("Invalid or expired code.");
+     if(btn) { btn.disabled=false; btn.innerText = "Verify & Continue →"; }
+  } else if (data && data.session) {
+     await afterAuth(data.user, currentAuthTargetPlan);
+  }
+}
 
 async function doAuthAction(mode, targetPlan){
   const emailEl=document.getElementById('auth-email');
@@ -1542,6 +1513,9 @@ async function doAuthAction(mode, targetPlan){
   
   if(emailEl&&!email){showAuthError('Please enter an email.'); return;}
   if(passEl&&(!pass||pass.length<6)){showAuthError('Password must be at least 6 characters.'); return;}
+  
+  currentAuthEmail = email;
+  currentAuthTargetPlan = targetPlan;
   
   const btn = document.querySelector('#auth-modal-body .btn-run');
   if(btn) { btn.disabled=true; btn.innerText = "Please wait..."; }
@@ -1565,12 +1539,16 @@ async function doAuthAction(mode, targetPlan){
         } else if (error) {
            showAuthError(error.message);
         } else if (data && !data.session) {
-           showAuthError('<span style="color:var(--green-text)">Account created! Please check your email to verify.</span>');
+           // Signup requires email confirmation. Show the OTP screen!
+           currentAuthType = 'signup';
+           showLoginPrompt('otp', targetPlan);
+           return;
         }
       }
       
-      if(!error && data.session){
+      if(!error && data && data.session){
         await afterAuth(data.user, targetPlan);
+        return;
       }
     }catch(e){ showAuthError('Auth error: '+e.message); }
   } else {
@@ -1578,11 +1556,13 @@ async function doAuthAction(mode, targetPlan){
     account.email  = email || account.email || 'you@example.com';
     persistAccount();
     finishLogin(targetPlan);
+    return;
   }
   
-  if(btn) { btn.disabled=false; btn.innerText = mode==='login' ? (targetPlan ? 'Log in & start trial →' : 'Log in →') : (targetPlan ? 'Create account & start trial →' : 'Sign up →'); }
+  if(btn) { btn.disabled=false; btn.innerText = mode==='login' ? 'Log in with Password →' : (targetPlan ? 'Create account & start trial →' : 'Sign up →'); }
 }
 
+/* ════════════════════════════════════════
 // Runs after a successful real sign-in/up: load or create the profile row,
 // pull the plan, then sync any local data up to the cloud.
 async function afterAuth(user, targetPlan){
