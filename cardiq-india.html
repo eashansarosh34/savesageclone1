@@ -3876,7 +3876,20 @@ updateFreshBar();
 const trkDateEl=document.getElementById('trk-date');
 if(trkDateEl)trkDateEl.value=today();
 maybeShowOnboarding();
+
 if(localStorage.getItem('cardiq_onboarded'))runA();
+
+// Check for upgrade URL parameter from landing page
+setTimeout(() => {
+  const urlParams = new URLSearchParams(window.location.search);
+  const upgradeTier = urlParams.get('upgrade');
+  if (upgradeTier === 'pro' || upgradeTier === 'pro_plus') {
+    showUpgradePrompt('landingPage', upgradeTier);
+    // Optionally clean up URL so refreshing doesn't re-trigger it
+    window.history.replaceState({}, document.title, window.location.pathname);
+  }
+}, 300); // Slight delay ensures UI is loaded before modal
+
 
 /* ════════════════════════════════════════
    SAME-PAGE GUARD
