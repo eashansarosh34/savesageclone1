@@ -1464,6 +1464,21 @@ function showUpgradePrompt(feature, tier){
 
 function closeAuthModal(){document.getElementById('auth-modal').style.display='none';}
 
+function showLoginPrompt(){
+  if(account.status!=='anon') return; // already logged in
+  document.getElementById('auth-modal-body').innerHTML=`
+    <div style="text-align:center;margin-bottom:1.1rem">
+      <div style="font-family:'DM Serif Display',serif;font-size:24px;color:var(--navy);margin-bottom:.375rem">Sign in to CardIQ</div>
+      <div style="font-size:14px;color:var(--slate)">Welcome back! Please enter your details.</div>
+    </div>
+    <div class="fg" style="margin-bottom:.6rem"><input type="email" id="auth-email" placeholder="you@example.com" style="width:100%;padding:9px 11px;border:1px solid var(--border-strong);border-radius:8px"></div>
+    <div class="fg" style="margin-bottom:.75rem"><input type="password" id="auth-pass" placeholder="Password" type="password" style="width:100%;padding:9px 11px;border:1px solid var(--border-strong);border-radius:8px"></div>
+    <button class="btn-run" onclick="doLogin('')" style="width:100%;margin-bottom:.5rem">Sign in →</button>
+  `;
+  document.getElementById('auth-modal').style.display='flex';
+}
+
+
 /* ════════════════════════════════════════
    AUTHENTICATION
    Real Supabase auth when connected; browser-only simulation otherwise.
@@ -3879,20 +3894,23 @@ maybeShowOnboarding();
 
 if(localStorage.getItem('cardiq_onboarded'))runA();
 
-// Check for upgrade URL parameter from landing page
+// Check for upgrade/login URL parameter from landing page
 setTimeout(() => {
   const urlParams = new URLSearchParams(window.location.search);
   const upgradeTier = urlParams.get('upgrade');
+  const action = urlParams.get('action');
+  
   if (upgradeTier === 'pro' || upgradeTier === 'pro_plus') {
-    // 1. Force kill onboarding so it doesn't block the screen
     const ob = document.getElementById('onboarding');
     if(ob) ob.style.display='none';
     localStorage.setItem('cardiq_onboarded','1');
-    
-    // 2. Show the auth/upgrade modal
     showUpgradePrompt('landingPage', upgradeTier);
-    
-    // 3. Clean up URL cleanly
+    try { window.history.replaceState({}, document.title, window.location.pathname); } catch(e){}
+  } else if (action === 'login' && account.status === 'anon') {
+    const ob = document.getElementById('onboarding');
+    if(ob) ob.style.display='none';
+    localStorage.setItem('cardiq_onboarded','1');
+    showLoginPrompt();
     try { window.history.replaceState({}, document.title, window.location.pathname); } catch(e){}
   }
 }, 400); // Slight delay ensures UI is loaded before modal
