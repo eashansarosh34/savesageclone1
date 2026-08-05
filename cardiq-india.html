@@ -2551,32 +2551,86 @@ function loadProfile(){
    Local-mode users just keep using localStorage. */
 async function pushProfileToCloud(){
   if(!backendReady() || !account.userId) return;
-  const blob={
-    prefs:{income:prefs.income,cibil:prefs.cibil,ecosystems:prefs.ecosystems,rewardType:prefs.rewardType,milesValue:prefs.milesValue},
-    myCards:[...myCards],
-    txLog: (typeof txLog!=='undefined')?txLog:[],
-    points: loadPts(),
-    payments: loadPays(),
-    cardEndings: JSON.parse(localStorage.getItem('cardiq_endings')||'{}')
-  };
-  try{ await sb.from('profiles').update({ data: blob, email:account.email }).eq('id', account.userId); }
-  catch(e){ /* 'data' column may not exist yet; safe to ignore until schema is applied */ }
+  
+  try {
+    await sb.from('profiles').update({ 
+      income: prefs.income, 
+      cibil: prefs.cibil, 
+      ecosystems: prefs.ecosystems 
+    }).eq('id', account.userId);
+  } catch(e) { console.warn("Profile sync error", e); }
+  
+  try {
+    const {data: existingCards} = await sb.from('my_cards').select('card_id').eq('user_id', account.userId);
+    const existingIds = existingCards ? existingCards.map(c=>c.card_id) : [];
+    const toInsert = [...myCards].filter(id => !existingIds.includes(id)).map(id => ({ user_id: account.userId, card_id: id }));
+    if(toInsert.length > 0) await sb.from('my_cards').insert(toInsert);
+    const toDelete = existingIds.filter(id => !myCards.has(id));
+    if(toDelete.length > 0) await sb.from('my_cards').delete().eq('user_id', account.userId).in('card_id', toDelete);
+  } catch(e) { console.warn("Cards sync error", e); }
+  
+  try {
+    await sb.from('transactions').delete().eq('user_id', account.userId);
+    if(typeof txLog !== 'undefined' && txLog && txLog.length > 0) {
+       const mapped = txLog.map(t => ({
+          user_id: account.userId,
+          date: t.date,
+          card_id: t.cardId,
+          cat: t.cat,
+          amount: t.amount,
+          merchant: t.merchant || '',
+          reward_earned: t.rewardEarned,
+          reward_type: t.rewardType,
+          was_optimal: !!t.wasOptimal,
+          alt_card_name: t.altCardName || null,
+          alt_reward: t.altReward || null
+       }));
+       await sb.from('transactions').insert(mapped);
+    }
+  } catch(e) { console.warn("Tx sync error", e); }
 }
+
 async function pullProfileFromCloud(){
   if(!backendReady() || !account.userId) return;
-  try{
-    const { data:row } = await sb.from('profiles').select('data').eq('id', account.userId).single();
-    const blob=row&&row.data;
-    if(!blob) return;
-    if(blob.prefs) Object.assign(prefs, blob.prefs);
-    if(blob.myCards) { myCards=new Set(blob.myCards); saveState&&saveState(); }
-    if(blob.txLog){ txLog=blob.txLog; saveTxState&&saveTxState(); }
-    if(blob.points) localStorage.setItem('cardiq_points', JSON.stringify(blob.points));
-    if(blob.payments) localStorage.setItem('cardiq_payments', JSON.stringify(blob.payments));
-    if(blob.cardEndings) localStorage.setItem('cardiq_endings', JSON.stringify(blob.cardEndings));
-    // refresh views if they're open
-    try{ renderTracker&&renderTracker(); }catch(e){}
-  }catch(e){ /* first login, no data yet */ }
+  
+  try {
+    const { data: prof } = await sb.from('profiles').select('income,cibil,ecosystems').eq('id', account.userId).single();
+    if(prof) {
+      if(prof.income !== null) prefs.income = prof.income;
+      if(prof.cibil !== null) prefs.cibil = prof.cibil;
+      if(prof.ecosystems) prefs.ecosystems = prof.ecosystems;
+    }
+  } catch(e) {}
+  
+  try {
+    const { data: cards } = await sb.from('my_cards').select('card_id').eq('user_id', account.userId);
+    if(cards) {
+      myCards = new Set(cards.map(c => c.card_id));
+      if(typeof renderMyCards === 'function') renderMyCards();
+      if(typeof saveState === 'function') saveState();
+    }
+  } catch(e) {}
+  
+  try {
+    const { data: txs } = await sb.from('transactions').select('*').eq('user_id', account.userId);
+    if(txs && txs.length > 0 && typeof txLog !== 'undefined') {
+      txLog = txs.map(t => ({
+         id: t.id,
+         date: t.date,
+         cardId: t.card_id,
+         cat: t.cat,
+         amount: parseFloat(t.amount),
+         merchant: t.merchant,
+         rewardEarned: parseFloat(t.reward_earned),
+         rewardType: t.reward_type,
+         wasOptimal: t.was_optimal,
+         altCardName: t.alt_card_name,
+         altReward: t.alt_reward ? parseFloat(t.alt_reward) : null
+      }));
+      if(typeof renderTx === 'function') renderTx();
+      if(typeof saveTxState === 'function') saveTxState();
+    }
+  } catch(e) {}
 }
 
 function obSkip(){dismissOnboarding();}
