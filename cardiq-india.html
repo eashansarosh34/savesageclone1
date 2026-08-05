@@ -1380,7 +1380,80 @@ const FEATURE_NAMES={
   unlimitedCards:'unlimited tracked cards',prioritySupport:'priority support'
 };
 
+
+// tier = 'pro' | 'pro_plus' — the tier this feature requires
+function showUpgradePrompt(feature, tier){
+  tier = tier || FEATURE_TIER[feature] || 'pro';
+  const feat=FEATURE_NAMES[feature]||'this feature';
+  const needSignup=(account.status==='anon');
+
+  // Feature lists per tier
+  const proFeatures=[
+    'Full wallet optimizer & breakdown',
+    'Transaction tracker + monthly reports',
+    'SMS-paste logging',
+    'Reminders for up to 5 cards',
+    'Data export',
+    '7-day free trial'
+  ];
+  const proPlusFeatures=[
+    'Everything in Pro, plus:',
+    'Gmail auto-sync — zero manual entry',
+    'Reconciliation + dispute letters',
+    'Automated email alerts',
+    'Family sharing (3 accounts)',
+    'Unlimited cards · priority support'
+  ];
+
+  const showTier = (tier==='pro_plus') ? 'pro_plus' : 'pro';
+  const P = PRICING[showTier];
+  const badge = showTier==='pro_plus' ? 'PRO+' : 'PRO';
+  const feats = showTier==='pro_plus' ? proPlusFeatures : proFeatures;
+  const actionPlan = showTier; // what doLogin/doUpgrade will set
+
+  // Cross-sell line: from a Pro gate → point up to Pro+; from a Pro+ gate → offer Pro fallback.
+  const crossSell = showTier==='pro'
+    ? `<div style="text-align:center;margin-top:.75rem;font-size:12px;color:var(--slate)">Need Gmail sync & reconciliation? <span onclick="showUpgradePrompt('gmailSync','pro_plus')" style="color:var(--blue);cursor:pointer;text-decoration:underline">See Pro+ →</span></div>`
+    : `<div style="text-align:center;margin-top:.75rem;font-size:12px;color:var(--slate)">Just need tracking & reports? <span onclick="showUpgradePrompt('tracking','pro')" style="color:var(--blue);cursor:pointer;text-decoration:underline">← See Pro (₹499)</span></div>`;
+
+  const badgeBg = showTier==='pro_plus' ? 'var(--navy)' : 'var(--gold)';
+  const badgeColor = showTier==='pro_plus' ? 'var(--gold)' : 'var(--navy)';
+
+  document.getElementById('auth-modal-body').innerHTML=`
+    <div style="text-align:center;margin-bottom:1.1rem">
+      <div style="display:inline-block;background:${badgeBg};color:${badgeColor};font-size:11px;font-weight:700;padding:3px 12px;border-radius:99px;margin-bottom:.75rem">${badge}</div>
+      <div style="font-family:'DM Serif Display',serif;font-size:23px;color:var(--navy);margin-bottom:.375rem">Unlock ${feat}</div>
+      <div style="font-size:13px;color:var(--slate)">${showTier==='pro_plus'?'This is a Pro+ feature — full automation so you never lift a finger.':'This is a Pro feature — the tracking, reports and optimizer that turn insight into saved money.'}</div>
+    </div>
+    <div style="background:var(--surface2);border-radius:12px;padding:1rem 1.25rem;margin-bottom:1rem">
+      <div style="display:flex;align-items:baseline;gap:6px;margin-bottom:.75rem">
+        <span style="font-family:'DM Serif Display',serif;font-size:32px;color:var(--navy)">₹${P.price}</span>
+        <span style="font-size:13px;color:var(--slate)">/year</span>
+        <span style="margin-left:auto;font-size:11px;color:var(--green-text);background:var(--green-bg);padding:2px 8px;border-radius:99px">${P.mo} · cancel anytime</span>
+      </div>
+      <div style="font-size:12px;color:var(--slate);line-height:1.9">
+        ${feats.map(f=>`✓ ${f}`).join('<br>')}
+      </div>
+    </div>
+    ${needSignup?`
+    <div id="auth-error" style="color:var(--red);font-size:12px;text-align:center;margin-bottom:10px;display:none;"></div>
+    <div class="fg" style="margin-bottom:.6rem"><input type="email" id="auth-email" placeholder="you@example.com" style="width:100%;padding:9px 11px;border:1px solid var(--border-strong);border-radius:8px"></div>
+    <div class="fg" style="margin-bottom:.75rem; position:relative;">
+      <input type="password" id="auth-pass" placeholder="Create a password (min 6 chars)" style="width:100%;padding:9px 11px;border:1px solid var(--border-strong);border-radius:8px;padding-right:36px;">
+      <div onclick="togglePassword()" style="position:absolute;right:10px;top:10px;cursor:pointer;opacity:0.6;" title="Show password">👁️</div>
+    </div>
+    <button class="btn-run" onclick="doAuthAction('signup', '${actionPlan}')" style="width:100%;margin-bottom:.5rem">Create account & start trial →</button>
+    <div style="text-align:center;font-size:12px;color:var(--slate);margin-bottom:.5rem">Already have an account? <span onclick="showLoginPrompt('login', '${actionPlan}')" style="color:var(--blue);cursor:pointer;">Log in</span></div>`
+    :`<button class="btn-run" onclick="doUpgrade('${actionPlan}')" style="width:100%;margin-bottom:.5rem">Start 7-day free trial →</button>`}
+    <div style="text-align:center;font-size:11px;color:var(--slate)">Clear refund policy · Cancel anytime</div>
+    ${crossSell}`;
+  document.getElementById('auth-modal').style.display='flex';
+}
+
+function closeAuthModal(){document.getElementById('auth-modal').style.display='none';}
+
 let currentAuthEmail = '';
+
 let currentAuthTargetPlan = '';
 let currentAuthType = ''; // 'signup' or 'magiclink' (for login)
 
