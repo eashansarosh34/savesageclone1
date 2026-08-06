@@ -469,6 +469,22 @@ footer a{color:var(--slate);text-decoration:none;margin-right:20px}
   },{threshold:.12});
   els.forEach(function(el){io.observe(el);});
 })();
+
+// Hide login / signup prompts if already logged in locally
+(function(){
+  try {
+    const raw = localStorage.getItem('cardiq-india-account');
+    if (raw) {
+      const acc = JSON.parse(raw);
+      if (acc.status && acc.status !== 'anon') {
+        const loginLink = document.querySelector('a[href="cardiq-india.html?action=login"]');
+        const demoLink = document.querySelector('a[href="cardiq-india.html?demo=1"]');
+        if (loginLink) loginLink.style.display = 'none';
+        if (demoLink) demoLink.style.display = 'none';
+      }
+    }
+  } catch(e) {}
+})();
 </script>
 </body>
 </html>
