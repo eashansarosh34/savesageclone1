@@ -1486,19 +1486,29 @@ function showLoginPrompt(mode = 'login', targetPlan = '', customTitle = '', cust
   } else {
     content = `
       <div style="text-align:center;margin-bottom:1.1rem">
-        <div style="font-family:'DM Serif Display',serif;font-size:24px;color:var(--navy);margin-bottom:.375rem">${currentAuthTitle || 'Sign in or Create account'}</div>
-        <div style="font-size:14px;color:var(--slate)">${currentAuthSubtitle || 'Enter your email to continue.'}</div>
+        <div style="font-family:'DM Serif Display',serif;font-size:24px;color:var(--navy);margin-bottom:.375rem">${currentAuthTitle || (isLogin ? 'Log in to CardIQ' : 'Create an account')}</div>
+        <div style="font-size:14px;color:var(--slate)">${isLogin ? 'Welcome back! Please log in.' : (currentAuthSubtitle || 'Start optimizing your cards today.')}</div>
       </div>
       <div id="auth-error" style="color:var(--red);font-size:12px;text-align:center;margin-bottom:10px;display:none;"></div>
       
-      <div class="fg" style="margin-bottom:1.25rem">
-        <input type="email" id="auth-email" placeholder="you@example.com" value="${currentAuthEmail}" style="width:100%;padding:10px 12px;border:1px solid var(--border-strong);border-radius:8px;font-size:14px;">
+      <div class="fg" style="margin-bottom:.6rem">
+        <input type="email" id="auth-email" placeholder="you@example.com" value="${currentAuthEmail}" style="width:100%;padding:9px 11px;border:1px solid var(--border-strong);border-radius:8px">
+      </div>
+      <div class="fg" style="margin-bottom:.75rem; position:relative;">
+        <input type="password" id="auth-pass" placeholder="${isLogin ? 'Password' : 'Create a password (min 6 chars)'}" style="width:100%;padding:9px 11px;border:1px solid var(--border-strong);border-radius:8px;padding-right:36px;">
+        <div onclick="togglePassword()" style="position:absolute;right:10px;top:10px;cursor:pointer;opacity:0.6;" title="Show password">👁️</div>
       </div>
       
-      <button class="btn-run" onclick="doSendOtp()" style="width:100%;margin-bottom:.5rem">Continue →</button>
+      ${isLogin ? `<div style="text-align:right;margin-bottom:1rem;font-size:12px;"><span onclick="doResetPassword()" style="color:var(--blue);cursor:pointer;font-weight:500;">Forgot password?</span></div>` : ''}
       
-      <div style="text-align:center;font-size:12px;color:var(--slate);margin-top:10px;">
-        We'll send you a secure login code. No passwords required.
+      <button class="btn-run" onclick="doAuthAction('${mode}', '${targetPlan}')" style="width:100%;margin-bottom:.5rem">${isLogin ? 'Log in with Password →' : (targetPlan ? 'Create account & start trial →' : 'Sign up →')}</button>
+      
+      ${isLogin ? `<div style="text-align:center;font-size:12px;color:var(--slate);margin-bottom:1rem;position:relative;z-index:1"><span style="background:var(--surface);padding:0 8px;color:var(--slate-light)">OR</span><hr style="position:absolute;top:50%;left:0;right:0;margin:0;border:none;border-top:1px solid var(--border);z-index:-1"></div>
+      <button class="btn-outline" onclick="doSendOtp()" style="width:100%;margin-bottom:1.5rem;padding:9px;border:1px solid var(--border-strong);border-radius:8px;background:transparent;cursor:pointer;font-weight:600;color:var(--navy)">Log in with Email OTP</button>` : ''}
+      
+      <div style="text-align:center;font-size:13px;color:var(--slate);margin-top:10px;">
+        ${isLogin ? 'Don\'t have an account? <button type="button" onclick="showLoginPrompt(\'signup\', \''+targetPlan+'\')" style="background:none;border:none;color:var(--blue);cursor:pointer;font-weight:600;font-size:13px;padding:4px 8px;">Sign up</button>' 
+                  : 'Already have an account? <button type="button" onclick="showLoginPrompt(\'login\', \''+targetPlan+'\')" style="background:none;border:none;color:var(--blue);cursor:pointer;font-weight:600;font-size:13px;padding:4px 8px;">Log in</button>'}
       </div>
     `;
   }
@@ -1507,33 +1517,44 @@ function showLoginPrompt(mode = 'login', targetPlan = '', customTitle = '', cust
   document.getElementById('auth-modal').style.display='flex';
 }
 
+function togglePassword(){
+  const p=document.getElementById('auth-pass');
+  if(p) p.type = (p.type==='password') ? 'text' : 'password';
+}
+
 function showAuthError(msg){
   const el = document.getElementById('auth-error');
   if(el){ el.innerHTML = msg; el.style.display='block'; }
   else toastC(msg);
 }
 
+async function doResetPassword(){
+  const emailEl=document.getElementById('auth-email');
+  const email=emailEl?emailEl.value.trim():'';
+  if(!email){ showAuthError('Please enter your email address first.'); return; }
+  if(!backendReady()){ showAuthError('Supabase keys not configured.'); return; }
+  
+  const { error } = await sb.auth.resetPasswordForEmail(email, { redirectTo: window.location.origin + window.location.pathname });
+  if(error) showAuthError(error.message);
+  else showAuthError('<span style="color:var(--green-text)">Password reset email sent! Please check your inbox.</span>');
+}
+
 async function doSendOtp(){
   const emailEl=document.getElementById('auth-email');
   const email=emailEl?emailEl.value.trim():'';
-  if(!email){ showAuthError('Please enter your email to receive a login code.'); return; }
+  if(!email){ showAuthError('Please enter your email to receive an OTP.'); return; }
+  if(!backendReady()){ showAuthError('Supabase keys not configured.'); return; }
   
   currentAuthEmail = email;
   currentAuthType = 'magiclink'; // OTP login
   
-  const btn = document.querySelector('#auth-modal-body .btn-run');
+  const btn = document.querySelector('#auth-modal-body .btn-outline');
   if(btn) { btn.disabled=true; btn.innerText = "Sending..."; }
-  
-  if(!backendReady()){
-    // Demo mode: pretend we sent it
-    setTimeout(() => showLoginPrompt('otp', currentAuthTargetPlan), 600);
-    return;
-  }
   
   const { error } = await sb.auth.signInWithOtp({ email });
   if (error) {
      showAuthError(error.message);
-     if(btn) { btn.disabled=false; btn.innerText = "Continue →"; }
+     if(btn) { btn.disabled=false; btn.innerText = "Log in with Email OTP"; }
   } else {
      showLoginPrompt('otp', currentAuthTargetPlan);
   }
@@ -1543,18 +1564,10 @@ async function doVerifyOtp(){
   const otpEl=document.getElementById('auth-otp');
   const token=otpEl?otpEl.value.trim():'';
   if(!token || token.length < 6){ showAuthError('Please enter the code.'); return; }
+  if(!backendReady()){ showAuthError('Supabase keys not configured.'); return; }
   
   const btn = document.querySelector('#auth-modal-body .btn-run');
   if(btn) { btn.disabled=true; btn.innerText = "Verifying..."; }
-  
-  if(!backendReady()){
-    // Demo mode: fake verification
-    account.status = (currentAuthTargetPlan==='pro') ? 'pro' : 'anon';
-    account.email  = currentAuthEmail || 'you@example.com';
-    persistAccount();
-    finishLogin(currentAuthTargetPlan);
-    return;
-  }
   
   const { data, error } = await sb.auth.verifyOtp({ email: currentAuthEmail, token, type: currentAuthType });
   if (error) {
@@ -1563,6 +1576,65 @@ async function doVerifyOtp(){
   } else if (data && data.session) {
      await afterAuth(data.user, currentAuthTargetPlan);
   }
+}
+
+async function doAuthAction(mode, targetPlan){
+  const emailEl=document.getElementById('auth-email');
+  const passEl=document.getElementById('auth-pass');
+  const email=emailEl?emailEl.value.trim():'';
+  const pass=passEl?passEl.value:'';
+  
+  if(emailEl&&!email){showAuthError('Please enter an email.'); return;}
+  if(passEl&&(!pass||pass.length<6)){showAuthError('Password must be at least 6 characters.'); return;}
+  
+  currentAuthEmail = email;
+  currentAuthTargetPlan = targetPlan;
+  
+  const btn = document.querySelector('#auth-modal-body .btn-run');
+  if(btn) { btn.disabled=true; btn.innerText = "Please wait..."; }
+
+  if(backendReady()){
+    try{
+      let data, error;
+      if (mode === 'login') {
+        const res = await sb.auth.signInWithPassword({ email, password: pass });
+        data = res.data; error = res.error;
+        if(error && error.message.includes('Invalid login credentials')) {
+           showAuthError('Incorrect email or password.');
+        } else if (error) {
+           showAuthError(error.message);
+        }
+      } else {
+        const res = await sb.auth.signUp({ email, password: pass });
+        data = res.data; error = res.error;
+        if(error && error.message.includes('already registered')) {
+           showLoginPrompt('login', targetPlan);
+           setTimeout(() => showAuthError('An account with this email already exists. Please log in.'), 100);
+           return;
+        } else if (error) {
+           showAuthError(error.message);
+        } else if (data && !data.session) {
+           // Signup requires email confirmation. Show the OTP screen!
+           currentAuthType = 'signup';
+           showLoginPrompt('otp', targetPlan);
+           return;
+        }
+      }
+      
+      if(!error && data && data.session){
+        await afterAuth(data.user, targetPlan);
+        return;
+      }
+    }catch(e){ showAuthError('Auth error: '+e.message); }
+  } else {
+    account.status = (targetPlan==='pro') ? 'pro' : 'anon';
+    account.email  = email || account.email || 'you@example.com';
+    persistAccount();
+    finishLogin(targetPlan);
+    return;
+  }
+  
+  if(btn) { btn.disabled=false; btn.innerText = mode==='login' ? 'Log in with Password →' : (targetPlan ? 'Create account & start trial →' : 'Sign up →'); }
 }
 
 // Runs after a successful real sign-in/up: load or create the profile row,
