@@ -1987,6 +1987,10 @@ function updSl(sid,oid){document.getElementById(oid).textContent=SL_LABELS[parse
 function toggleDet(id){const p=document.getElementById(id);if(p)p.style.display=p.style.display==='block'?'none':'block';}
 
 function showTab(t){
+  if(t === 'c' && account.status === 'anon') {
+    showLoginPrompt('signup', 'free', 'View Card Database', 'Create a free account to view the raw card database.');
+    return;
+  }
   ['a','b','c','d','e','f'].forEach(x=>{
     document.getElementById('tab-panel-'+x).style.display=x===t?'':'none';
     const btn=document.getElementById('tab-'+x);
@@ -2385,6 +2389,7 @@ function renderEditorTable(){
 function toggleExpand(id){expandedId=expandedId===id?null:id;renderEditorTable();}
 
 function updField(id,field,sub,val){
+  if(!isPro()){showUpgradePrompt('walletDetail'); renderEditorTable(); return;}
   const card=DB.find(c=>c.id===id);if(!card)return;
   const old=sub?(card[field]?.[sub]??'none'):card[field];
   if(sub){if(!card[field])card[field]={};card[field][sub]=val;}else card[field]=val;
@@ -2414,6 +2419,7 @@ function dupCard(id){
 }
 
 function openAddModal(){
+  if(!isPro()){showUpgradePrompt('walletDetail'); return;}
   ['mn-name','mn-bank'].forEach(id=>document.getElementById(id).value='');
   document.getElementById('mn-type').value='cashback';
   document.getElementById('mn-fee').value='0';
@@ -2453,6 +2459,7 @@ function saveNewCard(){
 }
 
 function openImportModal(){
+  if(!isPro()){showUpgradePrompt('walletDetail'); return;}
   document.getElementById('import-txt').value='';
   document.getElementById('import-err').style.display='none';
   document.getElementById('import-modal').classList.add('open');
@@ -2485,6 +2492,7 @@ function copyExp(){
 }
 
 function resetDB(){
+  if(!isPro()){showUpgradePrompt('walletDetail'); return;}
   if(!confirm('Reset to the 12 verified India cards?'))return;
   DB=deepCopy(DEFAULT_DB);nextId=12;expandedId=null;
   auditEntry('Database reset to defaults');saveState();renderEditorTable();toastC('Reset to 12 verified India cards');
