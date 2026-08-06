@@ -1454,7 +1454,7 @@ let currentAuthEmail = '';
 let currentAuthTargetPlan = '';
 let currentAuthType = ''; // 'signup' or 'magiclink' (for login)
 
-function showLoginPrompt(mode = 'login', targetPlan = ''){
+function showLoginPrompt(mode = 'login', targetPlan = '', customTitle = '', customSubtitle = ''){
   if(account.status!=='anon') return; // already logged in
   const isLogin = mode === 'login';
   const isOtp = mode === 'otp';
@@ -1483,8 +1483,8 @@ function showLoginPrompt(mode = 'login', targetPlan = ''){
   } else {
     content = `
       <div style="text-align:center;margin-bottom:1.1rem">
-        <div style="font-family:'DM Serif Display',serif;font-size:24px;color:var(--navy);margin-bottom:.375rem">${isLogin ? 'Log in to CardIQ' : 'Create an account'}</div>
-        <div style="font-size:14px;color:var(--slate)">${isLogin ? 'Welcome back! Please enter your details.' : 'Start optimizing your cards today.'}</div>
+        <div style="font-family:'DM Serif Display',serif;font-size:24px;color:var(--navy);margin-bottom:.375rem">${customTitle || (isLogin ? 'Log in to CardIQ' : 'Create an account')}</div>
+        <div style="font-size:14px;color:var(--slate)">${customSubtitle || (isLogin ? 'Welcome back! Please enter your details.' : 'Start optimizing your cards today.')}</div>
       </div>
       <div id="auth-error" style="color:var(--red);font-size:12px;text-align:center;margin-bottom:10px;display:none;"></div>
       
@@ -2049,6 +2049,10 @@ function updateFreshBar(){
    MODE A
 ════════════════════════════════════════ */
 function runA(){
+  if(account.status === 'anon'){
+    showLoginPrompt('signup', 'free', 'See Your Best Card', 'Create a free account to reveal your #1 card match instantly.');
+    return;
+  }
   const cat=document.getElementById('cat-sel').value;
   const spend=parseFloat(document.getElementById('spend-a').value)||15000;
   const wR=parseInt(document.getElementById('sl-r').value);
@@ -2177,6 +2181,10 @@ function buildSpendGrid(){
 function updTotal(){const t=Object.values(spendB).reduce((s,v)=>s+v,0);const el=document.getElementById('total-disp');if(el)el.textContent=`Total: ₹${t.toLocaleString('en-IN')}/month`;}
 
 function runB(){
+  if(account.status === 'anon'){
+    showLoginPrompt('signup', 'free', 'Optimize Your Wallet', 'Create a free account to reveal your mathematically optimal wallet.');
+    return;
+  }
   const total=Object.values(spendB).reduce((s,v)=>s+v,0);
   const{eligible,warnings,ineligible}=getPool(total);
   let html=renderWarnings(warnings,ineligible);
