@@ -4095,8 +4095,10 @@ document.addEventListener('click', function(e){
     e.preventDefault();                            // no page jump; onclick still ran
     return;
   }
-  // Any real URL: prevent it from navigating away or opening a new tab.
-  // (There are none in this app by design, but this enforces your rule absolutely.)
+  // Allow navigation back to the landing page
+  if(href==='index.html' || href==='cardiq-landing.html') return;
+
+  // Any other real URL: prevent it from navigating away or opening a new tab.
   e.preventDefault();
 }, true);
 
