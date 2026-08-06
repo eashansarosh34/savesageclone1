@@ -1451,11 +1451,16 @@ let currentAuthEmail = '';
 let currentAuthTargetPlan = '';
 let currentAuthType = ''; // 'signup' or 'magiclink' (for login)
 
+let currentAuthTitle = '';
+let currentAuthSubtitle = '';
+
 function showLoginPrompt(mode = 'login', targetPlan = '', customTitle = '', customSubtitle = ''){
   if(account.status!=='anon') return; // already logged in
   const isLogin = mode === 'login';
   const isOtp = mode === 'otp';
   currentAuthTargetPlan = targetPlan;
+  if (customTitle) currentAuthTitle = customTitle;
+  if (customSubtitle) currentAuthSubtitle = customSubtitle;
   
   let content = '';
   
@@ -1480,8 +1485,8 @@ function showLoginPrompt(mode = 'login', targetPlan = '', customTitle = '', cust
   } else {
     content = `
       <div style="text-align:center;margin-bottom:1.1rem">
-        <div style="font-family:'DM Serif Display',serif;font-size:24px;color:var(--navy);margin-bottom:.375rem">${customTitle || (isLogin ? 'Log in to CardIQ' : 'Create an account')}</div>
-        <div style="font-size:14px;color:var(--slate)">${customSubtitle || (isLogin ? 'Welcome back! Please enter your details.' : 'Start optimizing your cards today.')}</div>
+        <div style="font-family:'DM Serif Display',serif;font-size:24px;color:var(--navy);margin-bottom:.375rem">${currentAuthTitle || (isLogin ? 'Log in to CardIQ' : 'Create an account')}</div>
+        <div style="font-size:14px;color:var(--slate)">${isLogin ? 'Welcome back! Please log in.' : (currentAuthSubtitle || 'Start optimizing your cards today.')}</div>
       </div>
       <div id="auth-error" style="color:var(--red);font-size:12px;text-align:center;margin-bottom:10px;display:none;"></div>
       
@@ -1643,6 +1648,7 @@ async function afterAuth(user, targetPlan){
   }catch(e){ /* table may not exist yet; default to free */ }
   // A trial signup targets a paid tier; otherwise honour the stored plan.
   account.status = (targetPlan==='pro') ? 'pro' : plan;
+  persistAccount();
   await pullProfileFromCloud();   // cross-device: bring saved prefs/wallet down
   finishLogin(targetPlan);
 }
@@ -1693,6 +1699,7 @@ async function afterAuthSilent(user){
   let plan='free';
   try{ const { data:prof } = await sb.from('profiles').select('plan').eq('id',user.id).single(); if(prof&&prof.plan) plan=prof.plan; }catch(e){}
   account.status=plan;
+  persistAccount();
   await pullProfileFromCloud();
   updateAccountUI();
 }
