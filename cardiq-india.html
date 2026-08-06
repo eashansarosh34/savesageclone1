@@ -1463,12 +1463,12 @@ function showLoginPrompt(mode = 'login', targetPlan = '', customTitle = '', cust
     content = `
       <div style="text-align:center;margin-bottom:1.1rem">
         <div style="font-family:'DM Serif Display',serif;font-size:24px;color:var(--navy);margin-bottom:.375rem">Check your email</div>
-        <div style="font-size:14px;color:var(--slate)">We sent a 6-digit code to <strong>${currentAuthEmail}</strong>.</div>
+        <div style="font-size:14px;color:var(--slate)">We sent a code to <strong>${currentAuthEmail}</strong>.</div>
       </div>
       <div id="auth-error" style="color:var(--red);font-size:12px;text-align:center;margin-bottom:10px;display:none;"></div>
       
       <div class="fg" style="margin-bottom:.75rem">
-        <input type="text" id="auth-otp" placeholder="Enter 6-digit code" style="width:100%;padding:12px;border:1px solid var(--border-strong);border-radius:8px;font-size:18px;letter-spacing:4px;text-align:center;" maxlength="6">
+        <input type="text" id="auth-otp" placeholder="Enter code" style="width:100%;padding:12px;border:1px solid var(--border-strong);border-radius:8px;font-size:18px;letter-spacing:4px;text-align:center;" maxlength="8">
       </div>
       
       <button class="btn-run" onclick="doVerifyOtp()" style="width:100%;margin-bottom:1rem">Verify & Continue →</button>
@@ -1557,7 +1557,7 @@ async function doSendOtp(){
 async function doVerifyOtp(){
   const otpEl=document.getElementById('auth-otp');
   const token=otpEl?otpEl.value.trim():'';
-  if(!token || token.length < 6){ showAuthError('Please enter the 6-digit code.'); return; }
+  if(!token || token.length < 6){ showAuthError('Please enter the code.'); return; }
   if(!backendReady()){ showAuthError('Supabase keys not configured.'); return; }
   
   const btn = document.querySelector('#auth-modal-body .btn-run');
