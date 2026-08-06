@@ -1714,7 +1714,9 @@ function updateAccountUI(){
     // Free users: the primary CTA is "Get Pro" (the hook → paid conversion)
     el.innerHTML=`<button class="acct-btn" onclick="showUpgradePrompt('walletDetail','pro')">Get Pro</button>`;
   }else if(account.status==='pro'){
-    el.innerHTML=`<span class="acct-pro">PRO</span><span class="acct-email">${account.email||''}</span><button class="acct-link" onclick="doLogout()">Sign out</button>`;
+    el.innerHTML=`<span class="acct-pro">PRO</span><span class="acct-email" style="color:var(--slate-light); margin-left:8px">${account.email||''}</span><button class="acct-link" onclick="doLogout()" style="margin-left:12px">Sign out</button>`;
+  }else if(account.status==='free'){
+    el.innerHTML=`<button class="acct-btn" onclick="showUpgradePrompt('walletDetail','pro')">Get Pro</button><span class="acct-email" style="color:var(--slate-light); margin-left:12px">${account.email||''}</span><button class="acct-link" onclick="doLogout()" style="margin-left:12px">Sign out</button>`;
   }
 }
 
