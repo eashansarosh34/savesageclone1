@@ -1018,7 +1018,7 @@ input[type=range]{width:100%;accent-color:var(--navy);}
       <p style="font-size:12px;color:var(--slate);margin-bottom:.875rem;line-height:1.6">Got a transaction alert? Paste the raw SMS text below. CardIQ will extract the card, amount, merchant, date, and category automatically.</p>
       <div class="fg" style="margin-bottom:.75rem">
         <label for="sms-input">Bank SMS text</label>
-        <textarea id="sms-input" rows="3" placeholder="e.g. Rs.1499.00 spent on HDFC Bank Card ending 4521 at SWIGGY on 15-08-2026. Avl bal Rs.42,500" style="width:100%;padding:8px 10px;border:1px solid var(--border-strong);border-radius:8px;font-size:13px;color:var(--navy);background:var(--white);resize:vertical;line-height:1.6;outline:none" oninput="parseSMS()"></textarea>
+        <textarea id="sms-input" rows="3" placeholder="e.g. Rs.1499.00 spent on HDFC Bank Card ending 4521 at SWIGGY on 15-08-2026. Avl bal Rs.42,500" style="width:100%;padding:8px 10px;border:1px solid var(--border-strong);border-radius:8px;font-size:13px;color:var(--navy);background:var(--white);resize:vertical;line-height:1.6;outline:none" onfocus="if(!isPro()){this.blur();showUpgradePrompt('smsLog', 'pro');}" oninput="parseSMS()"></textarea>
       </div>
       <div id="sms-result" style="display:none"></div>
       <div id="sms-supported" style="margin-top:.75rem">
@@ -1367,8 +1367,8 @@ function isPro(){return account.status==='pro';}
 //   'pro'  = ₹499/yr (the bread & butter: optimizer, tracker, reports, reminders, export)
 //   'pro_plus' = ₹999/yr (automation: Gmail sync, reconciliation, alerts, family, priority)
 const FEATURE_TIER={
-  walletDetail:'pro', tracking:'pro', smsLog:'pro', monthlyReport:'pro',
-  manualReminders:'pro', dataExport:'pro', saveWallet:'pro', fullHistory:'pro',
+  walletDetail:'pro', tracking:'free', smsLog:'pro', monthlyReport:'pro',
+  manualReminders:'free', dataExport:'pro', saveWallet:'pro', fullHistory:'pro',
   gmailSync:'pro', reconciliation:'pro', autoAlerts:'pro',
   familySharing:'pro', prioritySupport:'pro', unlimitedCards:'pro'
 };
@@ -1990,6 +1990,10 @@ function showTab(t){
   }
   if(t === 'd' && account.status === 'anon') {
     showLoginPrompt('signup', 'free', 'Save Your Wallet', 'Create a free account to save your wallet and run an audit.');
+    return;
+  }
+  if(t === 'f' && account.status === 'anon') {
+    showLoginPrompt('signup', 'free', 'Track Your Spends', 'Create a free account to log spends and track your rewards.');
     return;
   }
   ['a','b','c','d','e','f'].forEach(x=>{
@@ -2860,6 +2864,10 @@ function renderTrkSuggestion(){
 /* ── log a transaction ── */
 function logTransaction(){
   if(!gate('tracking'))return;
+  if(!isPro() && txLog.length >= 5){
+    showUpgradePrompt('tracking', 'pro');
+    return;
+  }
   const cardId=parseInt(document.getElementById('trk-card').value);
   const cat=document.getElementById('trk-cat').value;
   const amount=parseFloat(document.getElementById('trk-amount').value)||0;
@@ -3148,6 +3156,10 @@ function atFreeCardCap(cardId){
 
 function addPointsBalance(){
   if(!gate('manualReminders'))return;
+  if(!isPro() && loadPts().length >= 1) {
+    showUpgradePrompt('manualReminders', 'pro');
+    return;
+  }
   const cardId=parseInt(document.getElementById('pts-card').value);
   const bal=parseFloat(document.getElementById('pts-balance').value);
   const earned=document.getElementById('pts-earned').value||today();
@@ -3164,6 +3176,10 @@ function addPointsBalance(){
 
 function addPaymentDue(){
   if(!gate('manualReminders'))return;
+  if(!isPro() && loadPays().length >= 1) {
+    showUpgradePrompt('manualReminders', 'pro');
+    return;
+  }
   const cardId=parseInt(document.getElementById('pay-card').value);
   const amt=parseFloat(document.getElementById('pay-amount').value);
   const due=document.getElementById('pay-due').value;
