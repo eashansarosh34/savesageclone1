@@ -2199,14 +2199,31 @@ function runB(){
     <div class="w-top">
       <div>
         <div class="w-lbl">★ Optimal ${best.combo.length}-card wallet</div>
-        <div class="wpills">${best.combo.map(c=>`<div class="wpill"><div class="wpill-dot" style="background:${cmap[c.id]}"></div><span>${c.name}</span><span class="wpill-fee">${c.annualFee===0?'Free':'₹'+c.annualFee.toLocaleString('en-IN')+'/yr'}</span></div>`).join('')}</div>
+        <div class="wpills">${best.combo.map(c=>`<div class="wpill"><div class="wpill-dot" style="background:${cmap[c.id]}"></div>${isPro()?`<span>${c.name}</span><span class="wpill-fee">${c.annualFee===0?'Free':'₹'+c.annualFee.toLocaleString('en-IN')+'/yr'}</span>`:`<span style="filter:blur(4px);user-select:none;opacity:0.7">Hidden Card</span><span class="wpill-fee" style="filter:blur(4px);user-select:none;opacity:0.7">₹999/yr</span>`}</div>`).join('')}</div>
       </div>
       <div class="w-net">
         <div class="w-net-big">${best.netAnnual>=0?'+':''}₹${Math.round(best.netAnnual).toLocaleString('en-IN')}</div>
         <div class="w-net-sub">net annual value</div>
         <div class="w-net-mo">₹${Math.round(best.netMonthly).toLocaleString('en-IN')}/month</div>
       </div>
-    </div>
+    </div>`;
+
+  // FREE users see the headline value (the teaser), but the
+  // specific cards, detailed per-category routing, and chart are Pro.
+  if(!isPro()){
+    html+=`<div class="pro-teaser">
+      <div class="pro-teaser-badge">PRO</div>
+      <div class="pro-teaser-title">See exactly how to reach ${best.netAnnual>=0?'+':''}₹${Math.round(best.netAnnual).toLocaleString('en-IN')}/year</div>
+      <div class="pro-teaser-sub">You're seeing the total net value of your optimal wallet. Unlock Pro to reveal the exact ${best.combo.length} cards you need and the category-by-category routing plan to hit this number.</div>
+      <button class="btn-run" style="max-width:280px;margin:.875rem auto 0" onclick="showUpgradePrompt('walletDetail')">Reveal my optimal wallet →</button>
+    </div></div>`;
+    html+=`<div class="meth"><strong>Method:</strong> Exhaustive combinatorial search over ${all.length} portfolios, routing each category to the best card after caps, exclusions, fees (waiver + 18% GST) and milestone bonuses. No sponsored rankings.</div>`;
+    html+=saveNudge();
+    document.getElementById('res-b').innerHTML=html;
+    return;
+  }
+
+  html+=`
     <div class="alloc-wrap">
       <table class="atbl">
         <thead><tr><th>Category</th><th>Spend</th><th>Use this card</th><th>Rate</th><th>Reward</th></tr></thead>
@@ -2230,21 +2247,6 @@ function runB(){
   html+=`</tbody><tfoot><tr><td colspan="2">Total · ₹${total.toLocaleString('en-IN')}/month</td><td>${feeNote}</td><td></td><td style="color:var(--gold)">+₹${Math.round(totR).toLocaleString('en-IN')}/mo</td></tr></tfoot></table></div>
     ${best.milestoneTotal>0?`<div style="margin-top:.75rem;padding:8px 12px;background:rgba(29,184,122,.12);border-radius:8px;font-size:12px;color:var(--gold)">🎯 Includes ₹${best.milestoneTotal.toLocaleString('en-IN')}/yr in milestone bonuses from hitting quarterly/annual spend thresholds</div>`:''}
     </div>`;
-
-  // FREE users see the headline wallet + total value above (the teaser), but the
-  // detailed per-category routing, top-3 alternatives, and chart are Pro.
-  if(!isPro()){
-    html+=`<div class="pro-teaser">
-      <div class="pro-teaser-badge">PRO</div>
-      <div class="pro-teaser-title">See exactly how to reach ${best.netAnnual>=0?'+':''}₹${Math.round(best.netAnnual).toLocaleString('en-IN')}/year</div>
-      <div class="pro-teaser-sub">You're seeing your optimal wallet and its total value. Unlock the full breakdown: which card to use for every category, all ${all.length} combinations ranked, and the category chart.</div>
-      <button class="btn-run" style="max-width:280px;margin:.875rem auto 0" onclick="showUpgradePrompt('walletDetail')">Unlock full breakdown →</button>
-    </div>`;
-    html+=`<div class="meth"><strong>Method:</strong> Exhaustive combinatorial search over ${all.length} portfolios, routing each category to the best card after caps, exclusions, fees (waiver + 18% GST) and milestone bonuses. No sponsored rankings.</div>`;
-    html+=saveNudge();
-    document.getElementById('res-b').innerHTML=html;
-    return;
-  }
 
   if(uplift>100&&best.combo.length>1)html+=`<div class="insight"><strong>Why multiple cards win:</strong> This ${best.combo.length}-card wallet earns <strong>₹${Math.round(uplift).toLocaleString('en-IN')} more per year</strong> than the best single card (${singleBest.combo[0].name} at ₹${Math.round(singleBest.netAnnual).toLocaleString('en-IN')}/yr). Rewards are optimised per category, fees waived where spend clears thresholds, and milestone bonuses counted.</div>`;
 
