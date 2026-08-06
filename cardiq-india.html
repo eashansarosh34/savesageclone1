@@ -1322,38 +1322,36 @@ const FAILURE_LESSONS=[
 // Affiliate availability is metadata ABOUT a card, deliberately separate from the
 // ranking fields, so it can never leak into the scoring math.
 const AFFILIATE = {
-  // cardId : {available, estCommission (₹ per approved application, indicative)}
-  0:{available:true, est:1500}, 1:{available:true, est:1200}, 2:{available:true, est:800},
-  3:{available:true, est:1000}, 4:{available:true, est:900},  5:{available:true, est:1100},
-  6:{available:true, est:1300}, 7:{available:true, est:1000}, 8:{available:true, est:2000},
-  9:{available:false,est:0},    10:{available:true,est:1200}, 11:{available:false,est:0}
+  // cardId : {available, url (your tracking link), estCommission}
+  // Replace these placeholder URLs with your actual affiliate tracking links from CashKaro/Cuelinks
+  0: {available:true, url:'https://cashkaro.com/sbi-simplyclick-placeholder', est:1500},
+  1: {available:true, url:'https://cashkaro.com/sbi-cashback-placeholder', est:1200},
+  2: {available:true, url:'https://cashkaro.com/hdfc-swiggy-placeholder', est:800},
+  3: {available:true, url:'https://cashkaro.com/amazon-pay-icici-placeholder', est:1000},
+  4: {available:true, url:'https://cashkaro.com/hsbc-cashback-placeholder', est:900},
+  5: {available:true, url:'https://cashkaro.com/airtel-axis-placeholder', est:1100},
+  6: {available:true, url:'https://cashkaro.com/axis-ace-placeholder', est:1300},
+  7: {available:true, url:'https://cashkaro.com/hdfc-millennia-placeholder', est:1000},
+  8: {available:true, url:'https://cashkaro.com/sbi-prime-placeholder', est:2000},
+  9: {available:false,url:'', est:0},
+  10:{available:true, url:'https://cashkaro.com/hdfc-infinia-placeholder', est:1200},
+  11:{available:false,url:'', est:0}
 };
-function affiliateFor(cardId){return AFFILIATE[cardId]||{available:false,est:0};}
-const TRACKED_AFFILIATE_URL = {
-  0: 'https://applyonline.hdfcbank.com/credit-cards.html',
-  1: 'https://www.sbicard.com/en/personal/credit-cards/rewards/cashback-sbi-card.page',
-  2: 'https://www.amazon.in/cbcc/marketpage',
-  3: 'https://www.axisbank.com/retail/cards/credit-card/axis-bank-ace-credit-card',
-  4: 'https://www.sbicard.com/en/personal/credit-cards/shopping/simplyclick-sbi-card.page',
-  5: 'https://www.idfcfirstbank.com/credit-card/wealth',
-  6: 'https://www.tatadigital.com/finance/creditcard',
-  7: 'https://www.axisbank.com/retail/cards/credit-card/flipkart-axis-bank-credit-card',
-  8: 'https://applyonline.hdfcbank.com/credit-cards.html',
-  10: 'https://www.sbicard.com/en/personal/credit-cards/travel/bpcl-sbi-card-octane.page'
-};
-
+function affiliateFor(cardId){return AFFILIATE[cardId]||{available:false,url:'',est:0};}
 // Apply link — in production this is your tracked affiliate URL per bank.
 function affiliateApply(cardId){
   const card=DB.find(c=>c.id===cardId);if(!card)return;
   const aff=affiliateFor(cardId);
-  if(!aff.available || !TRACKED_AFFILIATE_URL[cardId]){toastC(`${card.name} has no direct apply link — search "${card.name} apply" on the bank site.`);return;}
+  if(!aff.available || !aff.url){toastC(`${card.name} has no direct apply link — search "${card.name} apply" on the bank site.`);return;}
   // record intent locally (for conversion analytics when backend is connected)
   try{const log=JSON.parse(localStorage.getItem('cardiq_apply_intent')||'[]');log.push({cardId,at:new Date().toISOString()});localStorage.setItem('cardiq_apply_intent',JSON.stringify(log));}catch(e){}
   
-  toastC(`Opening ${card.name} application…`);
+  toastC(`Redirecting to ${card.bank}... (CardIQ earns a fee if approved, rankings are unbiased)`);
+  
+  // Open the tracked affiliate URL in a new tab so they don't lose their place on CardIQ
   setTimeout(() => {
-    window.open(TRACKED_AFFILIATE_URL[cardId], "_blank");
-  }, 1000);
+    window.open(aff.url, '_blank');
+  }, 800);
 }
 
 // Gift-card redemption partners (referral cut, no inventory held).
