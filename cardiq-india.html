@@ -1329,17 +1329,31 @@ const AFFILIATE = {
   9:{available:false,est:0},    10:{available:true,est:1200}, 11:{available:false,est:0}
 };
 function affiliateFor(cardId){return AFFILIATE[cardId]||{available:false,est:0};}
+const TRACKED_AFFILIATE_URL = {
+  0: 'https://applyonline.hdfcbank.com/credit-cards.html',
+  1: 'https://www.sbicard.com/en/personal/credit-cards/rewards/cashback-sbi-card.page',
+  2: 'https://www.amazon.in/cbcc/marketpage',
+  3: 'https://www.axisbank.com/retail/cards/credit-card/axis-bank-ace-credit-card',
+  4: 'https://www.sbicard.com/en/personal/credit-cards/shopping/simplyclick-sbi-card.page',
+  5: 'https://www.idfcfirstbank.com/credit-card/wealth',
+  6: 'https://www.tatadigital.com/finance/creditcard',
+  7: 'https://www.axisbank.com/retail/cards/credit-card/flipkart-axis-bank-credit-card',
+  8: 'https://applyonline.hdfcbank.com/credit-cards.html',
+  10: 'https://www.sbicard.com/en/personal/credit-cards/travel/bpcl-sbi-card-octane.page'
+};
+
 // Apply link — in production this is your tracked affiliate URL per bank.
 function affiliateApply(cardId){
   const card=DB.find(c=>c.id===cardId);if(!card)return;
   const aff=affiliateFor(cardId);
-  if(!aff.available){toastC(`${card.name} has no direct apply link — search "${card.name} apply" on the bank site.`);return;}
+  if(!aff.available || !TRACKED_AFFILIATE_URL[cardId]){toastC(`${card.name} has no direct apply link — search "${card.name} apply" on the bank site.`);return;}
   // record intent locally (for conversion analytics when backend is connected)
   try{const log=JSON.parse(localStorage.getItem('cardiq_apply_intent')||'[]');log.push({cardId,at:new Date().toISOString()});localStorage.setItem('cardiq_apply_intent',JSON.stringify(log));}catch(e){}
-  toastC(`Opening ${card.name} application… (CardIQ earns a referral fee only if you're approved — it never changes our ranking.)`);
-  // To send the user to the bank's application page in PRODUCTION, navigate in the
-  // SAME tab (honors the "no new tab" rule). Uncomment and wire your tracked URL:
-  // location.href = TRACKED_AFFILIATE_URL[cardId];   // same tab, not window.open
+  
+  toastC(`Opening ${card.name} application…`);
+  setTimeout(() => {
+    window.open(TRACKED_AFFILIATE_URL[cardId], "_blank");
+  }, 1000);
 }
 
 // Gift-card redemption partners (referral cut, no inventory held).
