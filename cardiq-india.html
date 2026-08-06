@@ -1260,8 +1260,7 @@ const account={
 
 // Pricing (the three-tier model)
 const PRICING={
-  pro:      {price:499,  label:'Pro',  per:'₹499/yr', mo:'₹42/mo'},
-  pro_plus: {price:999,  label:'Pro+', per:'₹999/yr', mo:'₹83/mo'}
+  pro: {price:799, label:'Pro', per:'₹799/yr', mo:'₹67/mo'}
 };
 
 /* ════════════════════════════════════════
@@ -1339,24 +1338,20 @@ const REDEMPTION_PARTNERS=[
   {name:'Swiggy Money',rate:0.05,minPts:300},
   {name:'BookMyShow',rate:0.05,minPts:300}
 ];
-function isLoggedIn(){return account.status==='pro'||account.status==='pro_plus';}
-function isPro(){return account.status==='pro'||account.status==='pro_plus';}
-function isProPlus(){return account.status==='pro_plus';}
+function isLoggedIn(){return account.status==='pro';}
+function isPro(){return account.status==='pro';}
 
 // Feature → minimum tier required. Three tiers now:
 //   'anon' = Free (the hook: ranker + "should I get this card")
 //   'pro'  = ₹499/yr (the bread & butter: optimizer, tracker, reports, reminders, export)
 //   'pro_plus' = ₹999/yr (automation: Gmail sync, reconciliation, alerts, family, priority)
 const FEATURE_TIER={
-  // Free (anon) — the hook only
-  // Pro — the core paid product
   walletDetail:'pro', tracking:'pro', smsLog:'pro', monthlyReport:'pro',
   manualReminders:'pro', dataExport:'pro', saveWallet:'pro', fullHistory:'pro',
-  // Pro+ — automation & premium
-  gmailSync:'pro_plus', reconciliation:'pro_plus', autoAlerts:'pro_plus',
-  familySharing:'pro_plus', prioritySupport:'pro_plus', unlimitedCards:'pro_plus'
+  gmailSync:'pro', reconciliation:'pro', autoAlerts:'pro',
+  familySharing:'pro', prioritySupport:'pro', unlimitedCards:'pro'
 };
-function tierRank(t){return t==='pro_plus'?3:t==='pro'?2:t==='free'?1:0;}
+function tierRank(t){return t==='pro'?2:t==='free'?1:0;}
 function hasAccessTo(feature){
   const need=FEATURE_TIER[feature]||'anon';
   return tierRank(account.status)>=tierRank(need);
@@ -1382,22 +1377,12 @@ const FEATURE_NAMES={
 
 
 // tier = 'pro' | 'pro_plus' — the tier this feature requires
-function showUpgradePrompt(feature, tier){
-  tier = tier || FEATURE_TIER[feature] || 'pro';
+function showUpgradePrompt(feature){
   const feat=FEATURE_NAMES[feature]||'this feature';
   const needSignup=(account.status==='anon');
 
-  // Feature lists per tier
   const proFeatures=[
-    'Full wallet optimizer & breakdown',
-    'Transaction tracker + monthly reports',
-    'SMS-paste logging',
-    'Reminders for up to 5 cards',
-    'Data export',
-    '7-day free trial'
-  ];
-  const proPlusFeatures=[
-    'Everything in Pro, plus:',
+    'Full wallet optimizer & tracking',
     'Gmail auto-sync — zero manual entry',
     'Reconciliation + dispute letters',
     'Automated email alerts',
@@ -1405,25 +1390,14 @@ function showUpgradePrompt(feature, tier){
     'Unlimited cards · priority support'
   ];
 
-  const showTier = (tier==='pro_plus') ? 'pro_plus' : 'pro';
-  const P = PRICING[showTier];
-  const badge = showTier==='pro_plus' ? 'PRO+' : 'PRO';
-  const feats = showTier==='pro_plus' ? proPlusFeatures : proFeatures;
-  const actionPlan = showTier; // what doLogin/doUpgrade will set
-
-  // Cross-sell line: from a Pro gate → point up to Pro+; from a Pro+ gate → offer Pro fallback.
-  const crossSell = showTier==='pro'
-    ? `<div style="text-align:center;margin-top:.75rem;font-size:12px;color:var(--slate)">Need Gmail sync & reconciliation? <span onclick="showUpgradePrompt('gmailSync','pro_plus')" style="color:var(--blue);cursor:pointer;text-decoration:underline">See Pro+ →</span></div>`
-    : `<div style="text-align:center;margin-top:.75rem;font-size:12px;color:var(--slate)">Just need tracking & reports? <span onclick="showUpgradePrompt('tracking','pro')" style="color:var(--blue);cursor:pointer;text-decoration:underline">← See Pro (₹499)</span></div>`;
-
-  const badgeBg = showTier==='pro_plus' ? 'var(--navy)' : 'var(--gold)';
-  const badgeColor = showTier==='pro_plus' ? 'var(--gold)' : 'var(--navy)';
+  const P = PRICING.pro;
+  const actionPlan = 'pro'; 
 
   document.getElementById('auth-modal-body').innerHTML=`
     <div style="text-align:center;margin-bottom:1.1rem">
-      <div style="display:inline-block;background:${badgeBg};color:${badgeColor};font-size:11px;font-weight:700;padding:3px 12px;border-radius:99px;margin-bottom:.75rem">${badge}</div>
+      <div style="display:inline-block;background:var(--gold);color:var(--navy);font-size:11px;font-weight:700;padding:3px 12px;border-radius:99px;margin-bottom:.75rem">PRO</div>
       <div style="font-family:'DM Serif Display',serif;font-size:23px;color:var(--navy);margin-bottom:.375rem">Unlock ${feat}</div>
-      <div style="font-size:13px;color:var(--slate)">${showTier==='pro_plus'?'This is a Pro+ feature — full automation so you never lift a finger.':'This is a Pro feature — the tracking, reports and optimizer that turn insight into saved money.'}</div>
+      <div style="font-size:13px;color:var(--slate)">This is a Pro feature — full automation, tracking, and insights to maximize your savings.</div>
     </div>
     <div style="background:var(--surface2);border-radius:12px;padding:1rem 1.25rem;margin-bottom:1rem">
       <div style="display:flex;align-items:baseline;gap:6px;margin-bottom:.75rem">
@@ -1432,7 +1406,7 @@ function showUpgradePrompt(feature, tier){
         <span style="margin-left:auto;font-size:11px;color:var(--green-text);background:var(--green-bg);padding:2px 8px;border-radius:99px">${P.mo} · cancel anytime</span>
       </div>
       <div style="font-size:12px;color:var(--slate);line-height:1.9">
-        ${feats.map(f=>`✓ ${f}`).join('<br>')}
+        ${proFeatures.map(f=>`✓ ${f}`).join('<br>')}
       </div>
     </div>
     ${needSignup?`
@@ -1445,8 +1419,7 @@ function showUpgradePrompt(feature, tier){
     <button class="btn-run" onclick="doAuthAction('signup', '${actionPlan}')" style="width:100%;margin-bottom:.5rem">Create account & start trial →</button>
     <div style="text-align:center;font-size:12px;color:var(--slate);margin-bottom:.5rem">Already have an account? <span onclick="showLoginPrompt('login', '${actionPlan}')" style="color:var(--blue);cursor:pointer;">Log in</span></div>`
     :`<button class="btn-run" onclick="doUpgrade('${actionPlan}')" style="width:100%;margin-bottom:.5rem">Start 7-day free trial →</button>`}
-    <div style="text-align:center;font-size:11px;color:var(--slate)">Clear refund policy · Cancel anytime</div>
-    ${crossSell}`;
+    <div style="text-align:center;font-size:11px;color:var(--slate)">Clear refund policy · Cancel anytime</div>`;
   document.getElementById('auth-modal').style.display='flex';
 }
 
@@ -1625,7 +1598,7 @@ async function doAuthAction(mode, targetPlan){
       }
     }catch(e){ showAuthError('Auth error: '+e.message); }
   } else {
-    account.status = (targetPlan==='pro_plus') ? 'pro_plus' : (targetPlan==='pro' ? 'pro' : 'anon');
+    account.status = (targetPlan==='pro') ? 'pro' : 'anon';
     account.email  = email || account.email || 'you@example.com';
     persistAccount();
     finishLogin(targetPlan);
@@ -1648,7 +1621,7 @@ async function afterAuth(user, targetPlan){
     else { await sb.from('profiles').upsert({ id:user.id, email:user.email, plan:'free' }); }
   }catch(e){ /* table may not exist yet; default to free */ }
   // A trial signup targets a paid tier; otherwise honour the stored plan.
-  account.status = (targetPlan==='pro_plus') ? 'pro_plus' : (targetPlan==='pro' ? 'pro' : plan);
+  account.status = (targetPlan==='pro') ? 'pro' : plan;
   await pullProfileFromCloud();   // cross-device: bring saved prefs/wallet down
   finishLogin(targetPlan);
 }
@@ -1665,13 +1638,13 @@ function finishLogin(targetPlan){
 }
 
 async function doUpgrade(targetPlan){
-  const plan = (targetPlan==='pro_plus') ? 'pro_plus' : 'pro';
+  const plan = 'pro';
   if(backendReady() && account.userId){
     // In production this happens via the Razorpay webhook server-side.
     try{ await sb.from('profiles').update({ plan }).eq('id', account.userId); }catch(e){}
   }
   account.status=plan; persistAccount(); closeAuthModal(); updateAccountUI();
-  toastC(plan==='pro_plus'?'Pro+ trial started — full automation unlocked':'Pro trial started — all Pro features unlocked');
+  toastC('Pro trial started — all Pro features unlocked');
 }
 
 async function doLogout(){
@@ -1710,9 +1683,8 @@ function updateAccountUI(){
     // Free users: the primary CTA is "Get Pro" (the hook → paid conversion)
     el.innerHTML=`<button class="acct-btn" onclick="showUpgradePrompt('walletDetail','pro')">Get Pro</button>`;
   }else if(account.status==='pro'){
-    el.innerHTML=`<span class="acct-pro">PRO</span><span class="acct-email">${account.email||''}</span><button class="acct-btn" onclick="showUpgradePrompt('gmailSync','pro_plus')">Upgrade to Pro+</button><button class="acct-link" onclick="doLogout()">Sign out</button>`;
-  }else{ // pro_plus
-    el.innerHTML=`<span class="acct-proplus">PRO+</span><span class="acct-email">${account.email||''}</span><button class="acct-link" onclick="doLogout()">Sign out</button>`;
+    el.innerHTML=`<span class="acct-pro">PRO</span><span class="acct-email">${account.email||''}</span><button class="acct-link" onclick="doLogout()">Sign out</button>`;
+  }</span><button class="acct-link" onclick="doLogout()">Sign out</button>`;
   }
 }
 
@@ -3132,7 +3104,7 @@ function addPointsBalance(){
   const earned=document.getElementById('pts-earned').value||today();
   const card=DB.find(c=>c.id===cardId);
   if(!card||!bal||bal<=0){alert('Enter a valid points balance.');return;}
-  if(atFreeCardCap(cardId)){showUpgradePrompt('unlimitedCards','pro_plus');return;}
+  if(atFreeCardCap(cardId)){showUpgradePrompt('unlimitedCards');return;}
   const pts=loadPts().filter(p=>p.cardId!==cardId);
   const pv=card.pointValue||1;
   pts.push({cardId,cardName:card.name,bank:card.bank,balance:bal,value:bal*pv,earnedAt:earned});
@@ -3148,7 +3120,7 @@ function addPaymentDue(){
   const due=document.getElementById('pay-due').value;
   const card=DB.find(c=>c.id===cardId);
   if(!card||!amt||!due){alert('Enter amount and due date.');return;}
-  if(atFreeCardCap(cardId)){showUpgradePrompt('unlimitedCards','pro_plus');return;}
+  if(atFreeCardCap(cardId)){showUpgradePrompt('unlimitedCards');return;}
   const pays=loadPays().filter(p=>!(p.cardId===cardId&&p.due===due));
   pays.push({cardId,cardName:card.name,amount:amt,due,paid:false});
   savePays(pays);
