@@ -488,6 +488,18 @@ input[type=range]{width:100%;accent-color:var(--navy);}
 
 <main class="shell">
 
+<style>
+.tab-pro-badge {
+  background: var(--gold);
+  color: var(--navy);
+  font-size: 9px;
+  font-weight: 800;
+  padding: 2px 5px;
+  border-radius: 4px;
+  margin-left: 6px;
+  vertical-align: middle;
+}
+</style>
   <!-- Nav -->
   <nav class="nav" role="tablist" aria-label="Tool sections">
     <button class="nav-btn active" role="tab" aria-selected="true"  onclick="showTab('a')" id="tab-a">
@@ -511,7 +523,7 @@ input[type=range]{width:100%;accent-color:var(--navy);}
       <span class="nb-sub">Methodology &amp; trust</span>
     </button>
     <button class="nav-btn" role="tab" aria-selected="false" onclick="showTab('f')" id="tab-f">
-      <span class="nb-label">Tracker</span>
+      <span class="nb-label">Tracker <span class="tab-pro-badge">PRO</span></span>
       <span class="nb-sub">Log spends · watch caps</span>
     </button>
   </nav>
