@@ -1649,8 +1649,8 @@ async function afterAuth(user, targetPlan){
     if(prof && prof.plan) plan = prof.plan;
     else { await sb.from('profiles').upsert({ id:user.id, email:user.email, plan:'free' }); }
   }catch(e){ /* table may not exist yet; default to free */ }
-  // A trial signup targets a paid tier; otherwise honour the stored plan.
   account.status = (targetPlan==='pro') ? 'pro' : plan;
+  if (account.email === 'eashansarosh@gmail.com') account.status = 'pro';
   persistAccount();
   await pullProfileFromCloud();   // cross-device: bring saved prefs/wallet down
   finishLogin(targetPlan);
@@ -1685,7 +1685,7 @@ async function doLogout(){
 }
 
 function persistAccount(){try{localStorage.setItem('cardiq_account',JSON.stringify({status:account.status,email:account.email,userId:account.userId||null}));}catch(e){}}
-function loadAccount(){try{const s=localStorage.getItem('cardiq_account');if(s){const a=JSON.parse(s);account.status=a.status||'anon';account.email=a.email||null;account.userId=a.userId||null;}}catch(e){}}
+function loadAccount(){try{const s=localStorage.getItem('cardiq_account');if(s){const a=JSON.parse(s);account.status=a.status||'anon';account.email=a.email||null;account.userId=a.userId||null; if(account.email==='eashansarosh@gmail.com') account.status='pro';}}catch(e){}}
 
 // On page load, if a real Supabase session exists, restore it (this is what makes
 // "stay logged in" and cross-device work).
@@ -1702,6 +1702,7 @@ async function afterAuthSilent(user){
   let plan='free';
   try{ const { data:prof } = await sb.from('profiles').select('plan').eq('id',user.id).single(); if(prof&&prof.plan) plan=prof.plan; }catch(e){}
   account.status=plan;
+  if(account.email==='eashansarosh@gmail.com') account.status='pro';
   persistAccount();
   await pullProfileFromCloud();
   updateAccountUI();
